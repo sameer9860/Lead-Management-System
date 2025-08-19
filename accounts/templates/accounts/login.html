@@ -2,6 +2,7 @@
 {% block content %}
 {% block sidebar %}{% endblock %}
 
+    
 <style>
     body {
         background: linear-gradient(135deg, #1e1e2f 0%, #2d3748 100%);
@@ -83,8 +84,19 @@
 </style>
 
 <div class="login-container">
+    <div class="toast toast-end toast-top ">
+        {% for message in messages %}
+        <div class="alert alert-error alert-soft" style="color: #f44336; ">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Error:</strong>
+            <span>{{message}}</span>
+        </div>
+        {% endfor %}
+    </div>
+
     <h2>Login</h2>
     <form method="post">
+
         {% csrf_token %}
 
         <!-- Username -->
@@ -92,31 +104,34 @@
             <label for="id_username" class="form-label">Username</label>
             <input type="text" name="username" class="form-control" id="id_username" required>
         </div>
-
-        <!-- Password with toggle -->
-        <div class="mb-3 password-wrapper">
+        <div class="mb-3 password-wrapper position-relative">
             <label for="id_password" class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" id="id_password" required>
-            <span class="toggle-password" onclick="togglePassword()">🙈</span>
+            <input type="password" name="password" class="form-control pe-5" id="id_password" required>
+            <span class="toggle-password position-absolute end-0 top-50 translate-middle-y me-3" style="cursor: pointer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path class="eye-icon" d="M12 5C5 5 1 12 1 12s4 7 11 7 11-7 11-7-4-7-11-7z" />
+                    <circle class="eye-icon" cx="12" cy="12" r="3" />
+                    <path class="slash-icon" d="M4 4l16 16" stroke-width="2" stroke-linecap="round" style="display: none"/>
+                </svg>
+            </span>
         </div>
-
-        <!-- Submit -->
         <button type="submit" class="btn btn-primary w-90">Login</button>
     </form>
-</div>
 
-<!-- Small JS for password toggle -->
-<script>
-function togglePassword() {
-    const passwordInput = document.getElementById("id_password");
-    const toggleBtn = document.querySelector(".toggle-password");
-    if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        toggleBtn.textContent = "👁";
-    } else {
-        passwordInput.type = "password";
-        toggleBtn.textContent = "🙈";
-    }
-}
-</script>
+        </div>
+        
+        <script>
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById("id_password");
+            const slashIcon = this.querySelector(".slash-icon");
+            
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                slashIcon.style.display = "block";
+            } else {
+                passwordInput.type = "password";
+                slashIcon.style.display = "none";
+            }
+        });
+        </script>
 {% endblock %}

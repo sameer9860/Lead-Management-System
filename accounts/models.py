@@ -19,7 +19,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="sales_executive")
     first_name = models.CharField(max_length=30, blank=False, null=False)
     last_name = models.CharField(max_length=30, blank=False, null=False)
-    profile_pic = models.ImageField(upload_to="profile_pics/", blank=False, null=False)
+    profile_pic = models.ImageField(upload_to="profile_pic/", blank=False, null=False, default="default_profile_pic.jpg")
 
     def save(self, *args, **kwargs):
         if self.is_superuser:   # always enforce
@@ -27,5 +27,6 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        
         return f"{self.username} ({self.role})"
 

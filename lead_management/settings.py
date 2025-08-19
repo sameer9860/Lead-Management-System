@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -126,9 +126,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']  # Directory for static files
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # Directory for uploaded media files
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # lead_management/settings.py
 AUTH_USER_MODEL = "accounts.CustomUser"  # Use the custom user model
 LOGIN_REDIRECT_URL = 'leads:dashboard'

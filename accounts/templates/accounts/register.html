@@ -3,7 +3,17 @@
 {% block content %}
 
 <div class="register-outer" style="min-height:100vh; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, #1e1e2f 0%, #2d3748 100%); padding:20px;">
+    
     <div class="register-container" style="width:100%; max-width:800px; background:#2d2d3a; padding:35px; border-radius:12px; box-shadow:0px 8px 25px rgba(0,0,0,0.4); color:#f8f9fa;">
+        <div class="toast toast-end toast-top ">
+            {% for message in messages %}
+            <div class="alert alert-error alert-soft" style="color: #f44336; ">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Error:</strong>
+                <span>{{message}}</span>
+            </div>
+            {% endfor %}
+        </div>
 
         <h2 style="text-align:center; font-weight:600; margin-bottom:25px; color:#60a5fa;">Register User</h2>
 
