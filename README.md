@@ -1,6 +1,6 @@
 Installation
 1. Clone the Repository
-git clone https://github.com/sameer9860/Todo-App.git
+git clone https://github.com/sameer9860/Lead-Management-System
 cd Todo-App(if you are in another dir)
 2. Set Up Virtual Environment
 python -m venv env
