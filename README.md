@@ -1,7 +1,7 @@
 Installation
 1. Clone the Repository
 git clone https://github.com/sameer9860/Lead-Management-System
-cd Todo-App(if you are in another dir)
+cd lead-management-system(if you are in another dir)
 2. Set Up Virtual Environment
 python -m venv env
 .\env\Scripts\activate  # Windows
