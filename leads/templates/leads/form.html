@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="lead-container">
+
+    <!-- Full Width Card -->
+    <div class="card shadow border-0 bg-dark lead-card">
+    
+        <!-- Centered heading -->
+        <div class="card-header bg-dark-purple text-white text-center py-3">
+            <h4 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i> {{ title }}</h4>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form method="post" id="leadForm" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <!-- Personal Info + Company & Assignment -->
+                <div class="row g-3 mb-3">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3 text-light section-title d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill me-2 text-info"></i> Personal Information
+                        </h6>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label fw-semibold text-light">Full Name <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" name="name" class="form-control form-control-md bg-dark border-dark text-light" id="id_name"
+                                    value="{{ form.name.value|default_if_none:'' }}" placeholder="John Doe" required>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label fw-semibold text-light">Email <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-envelope-fill"></i></span>
+                                <input type="email" name="email" class="form-control form-control-md bg-dark border-dark text-light" id="id_email"
+                                    value="{{ form.email.value|default_if_none:'' }}" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label for="id_phone" class="form-label fw-semibold text-light">Phone</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-telephone-fill"></i></span>
+                                <input type="text" name="phone" class="form-control form-control-md bg-dark border-dark text-light" id="id_phone"
+                                    value="{{ form.phone.value|default_if_none:'' }}" placeholder="+977 98XXXXXXXX">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3 text-light section-title d-flex align-items-center">
+                            <i class="bi bi-building-fill me-2 text-info"></i> Company & Assignment
+                        </h6>
+
+                        <!-- Company -->
+                        <div class="mb-3">
+                            <label for="id_company" class="form-label fw-semibold text-light">Company <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-building-fill"></i></span>
+                                <input type="text" name="company" class="form-control form-control-md bg-dark border-dark text-light" id="id_company"
+                                    value="{{ form.company.value|default_if_none:'' }}" placeholder="Microsoft" required>
+                            </div>
+                        </div>
+
+                        <!-- Assign To -->
+                        <div class="mb-3">
+                            <label for="id_assigned_to" class="form-label fw-semibold text-light">Assign To</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-person-check-fill"></i></span>
+                                <select name="assigned_to" class="form-select form-select-md bg-dark border-dark text-light" id="id_assigned_to">
+                                    <option value="">-- Select User --</option>
+                                    {% for user in form.fields.assigned_to.queryset %}
+                                        <option value="{{ user.id }}" {% if form.assigned_to.value == user.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ user.get_full_name|default:user.username }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <hr class="text-secondary">
+
+                <!-- Source & Status -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="id_source" class="form-label fw-semibold text-light">Lead Source</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-link-45deg"></i></span>
+                            <select name="source" class="form-select form-select-md bg-dark border-dark text-light" id="id_source">
+                                <option value="">-- Select Source --</option>
+                                <option value="Website" {% if form.source.value == "Website" %}selected{% endif %}>Website</option>
+                                <option value="Referral" {% if form.source.value == "Referral" %}selected{% endif %}>Referral</option>
+                                <option value="Social Media" {% if form.source.value == "Social Media" %}selected{% endif %}>Social Media</option>
+                                <option value="Email Campaign" {% if form.source.value == "Email Campaign" %}selected{% endif %}>Email Campaign</option>
+                                <option value="Event" {% if form.source.value == "Event" %}selected{% endif %}>Event</option>
+                                <option value="Other" {% if form.source.value == "Other" %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="id_status" class="form-label fw-semibold text-light">Status <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark-secondary border-dark text-light"><i class="bi bi-activity"></i></span>
+                            <select name="status" class="form-select form-select-md bg-dark border-dark text-light" id="id_status" required>
+                                {% for value, display in form.fields.status.choices %}
+                                    <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="row mt-3">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success btn-md px-4 py-2 me-2">
+                            <i class="bi bi-check-circle-fill me-1"></i> Save Lead
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-md px-4 py-2">
+                            <i class="bi bi-x-circle-fill me-1"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    /* Container */
+    .lead-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #1e1e2f 0%, #2d3748 100%);
+        padding-top: 80px;
+        padding-bottom: 40px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* Card */
+    .lead-card {
+        width: 100%;
+        max-width: 1200px;
+        margin: auto 0; /* move card slightly up */
+        border-radius: 0.25rem;
+        border: 1px solid #3a3d42;
+        background-color: #1a1d20;
+        margin-top: -85px;
+    }
+
+    /* Dark theme */
+    .bg-dark { background-color: #1a1d20 !important; }
+    .bg-dark-secondary { background-color: #2a2d32 !important; }
+    .border-dark { border-color: #3a3d42 !important; }
+    .bg-dark-purple { background-color: #4A2C83 !important; }
+
+    /* Inputs */
+    .form-control, .form-select {
+        background-color: #1a1d20 !important;
+        color: #fff !important;
+        border: 1px solid #3a3d42 !important;
+        font-size: 0.95rem;
+        padding: 0.6rem 0.9rem;
+    }
+
+    .form-control::placeholder,
+    .form-select::placeholder {
+        color: #ccc;
+        opacity: 1;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 0.2rem rgba(99,102,241,0.25);
+        color: #fff;
+    }
+
+    .input-group-text {
+        background-color: #2a2d32 !important;
+        color: #fff;
+        border: 1px solid #c5d3ec69;
+    }
+
+    /* Buttons */
+    .btn { font-size: 0.95rem; font-weight: 600; }
+    .btn-success { background: linear-gradient(to right, #0d6efd, #0dcaf0); border: none; }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 3px 6px rgba(13,110,253,0.4); }
+    .btn-secondary { background: linear-gradient(to right, #6c757d, #adb5bd); border: none; }
+    .btn-secondary:hover { transform: translateY(-1px); box-shadow: 0 3px 6px rgba(108,117,125,0.4); }
+
+    /* Section Title */
+    .section-title { font-size: 1rem; border-bottom: 2px solid #4A2C83; padding-bottom: 0.3rem; }
+
+    /* Divider */
+    hr.text-secondary { border-color: #6366f1 }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .col-md-6 { flex: 0 0 100%; max-width: 100%; }
+        .lead-card { width: 95%; margin-top: -30px; }
+    }
+</style>
+{% endblock %}

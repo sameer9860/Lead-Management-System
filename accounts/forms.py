@@ -3,6 +3,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser 
 
+
+
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
@@ -15,3 +17,6 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ["username", "email", "first_name", "last_name", "phone_no", "address", "profile_pic", "role", "password1", "password2"]
+
+
+

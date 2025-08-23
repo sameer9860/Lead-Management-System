@@ -1,94 +1,54 @@
 {% extends 'base.html' %}
-
-
+ {% load static tailwind_tags %}
+ 
 {% block content %}
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js CDN -->
 
-
-<!-- Main content -->
 <main class="flex-grow p-6 overflow-auto">
 
 
-    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">LMS Dashboard</h1>
 
-    <!-- Summary Cards -->
+
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-        <div class="card bg-base-100 shadow p-4">
-            <h2 class="text-lg font-semibold mb-2">Total Employees</h2>
-            <p class="text-3xl font-bold text-primary">1,250</p>
+
+        <div class="card text-white shadow p-4" style="background-color: #3498db;" 
+             onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" 
+             onfocus="this.style.transform='scale(1.1)'" onblur="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Total Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.total }}</p>
         </div>
-        <div class="card bg-base-100 shadow p-4">
-            <h2 class="text-lg font-semibold mb-2">Total Payments</h2>
-            <p class="text-3xl font-bold text-green-600">Rs. 7,50,000</p>
+    
+        <div class="card  text-white shadow p-4" style="background-color: #e74c3c;" 
+             onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" 
+             onfocus="this.style.transform='scale(1.1)'" onblur="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">New Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.new }}</p>
         </div>
-        <div class="card bg-base-100 shadow p-4">
-            <h2 class="text-lg font-semibold mb-2">Pending Payments</h2>
-            <p class="text-3xl font-bold text-red-600">Rs. 1,20,000</p>
+    
+        <div class="card bg-yellow-400 text-gray-800 shadow p-4" style="background-color: #f1c40f;" 
+             onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" 
+             onfocus="this.style.transform='scale(1.1)'" onblur="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">In Progress Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.in_progress }}</p>
         </div>
-        <div class="card bg-base-100 shadow p-4">
-            <h2 class="text-lg font-semibold mb-2">Active Clients</h2>
-            <p class="text-3xl font-bold text-secondary">12</p>
+    
+        <div class="card bg-green-500 text-white shadow p-4" style="background-color: #2ecc71;" 
+             onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" 
+             onfocus="this.style.transform='scale(1.1)'" onblur="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Converted Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.converted }}</p>
         </div>
+    
+        <div class="card bg-gray-500 text-white shadow p-4" style="background-color: #95a5a6;" 
+             onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" 
+             onfocus="this.style.transform='scale(1.1)'" onblur="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Lost Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.lost }}</p>
+        </div>
+    
     </div>
-
-    <!-- Charts Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Payments Bar Chart -->
-        <div class="card bg-base-100 shadow p-4">
-            <h2 class="text-xl font-semibold mb-4">Monthly Payments</h2>
-            <canvas id="paymentsBarChart" width="400" height="250"></canvas>
-        </div>
-
-        <!-- Fees Distribution Pie Chart -->
-        <div class="card bg-base-100 shadow p-4">
-            <h2 class="text-xl font-semibold mb-4">dividends Distribution</h2>
-            <canvas id="feesPieChart" width="400" height="250"></canvas>
-        </div>
-    </div>
-</main>
-
-<!-- Chart.js Script -->
-<script>
-    // Monthly Payments Bar Chart
-    const paymentsCtx = document.getElementById('paymentsBarChart').getContext('2d');
-    const paymentsBarChart = new Chart(paymentsCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-            datasets: [{
-                label: 'Payments Received (₹)',
-                data: [90000, 85000, 72000, 95000, 87000, 92000, 88000],
-                backgroundColor: '#22c55e' // Tailwind green-500
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-
-    // Fees Distribution Pie Chart
-    const feesCtx = document.getElementById('feesPieChart').getContext('2d');
-    const feesPieChart = new Chart(feesCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Main Income', 'Extra Income', 'Savings', 'Loan'],
-            datasets: [{
-                label: 'Fees',
-                data: [55, 15, 20, 10],
-                backgroundColor: [
-                    '#3b82f6',  // blue-500
-                    '#ef4444',  // red-500
-                    '#fbbf24',  // yellow-400
-                    '#8b5cf6'   // purple-500
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-        }
-    });
-</script>
-{% endblock content %}
+    </main>
+{% endblock %}
