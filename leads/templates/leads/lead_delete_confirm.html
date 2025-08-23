@@ -1,0 +1,78 @@
+<!-- templates/leads/lead_delete_confirm.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Lead - {{ lead.name }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Navigation -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'leads:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'leads:lead_list' %}">Leads</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'leads:lead_details' lead.pk %}">{{ lead.name }}</a></li>
+                <li class="breadcrumb-item active">Delete</li>
+            </ol>
+        </nav>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fas fa-warning"></i>
+                            <strong>Warning!</strong> This action cannot be undone.
+                        </div>
+                        
+                        <p>Are you sure you want to delete the following lead?</p>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ lead.name }}</h5>
+                                <p class="card-text">
+                                    <strong>Email:</strong> {{ lead.email }}<br>
+                                    <strong>Phone:</strong> {{ lead.phone|default:"Not provided" }}<br>
+                                    <strong>Company:</strong> {{ lead.company|default:"Not provided" }}<br>
+                                    <strong>Status:</strong> {{ lead.get_status_display }}<br>
+                                    <strong>Created:</strong> {{ lead.created_at|date:"M d, Y H:i" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        {% if lead.notes.count > 0 %}
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="fas fa-info-circle"></i>
+                            This lead has <strong>{{ lead.notes.count }}</strong> note(s) that will also be deleted.
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4">
+                            <form method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Yes, Delete Lead
+                                </button>
+                            </form>
+                            <a href="{% url 'leads:lead_details' lead.pk %}" class="btn btn-secondary ms-2">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

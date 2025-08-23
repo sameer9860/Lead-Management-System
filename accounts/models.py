@@ -30,7 +30,5 @@ class CustomUser(AbstractUser):
         
         return f"{self.username} ({self.role})"
     
-    class abc(models.Model):
-        # This class is not used, but it can be used for future extensions
-        name = models.CharField(max_length=100)
+
         

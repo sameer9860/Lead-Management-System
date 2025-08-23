@@ -36,7 +36,7 @@
                     
                 {% endif %}
 
-                {% if user.is_superuser or user.role == 'admim' or user.role == 'sales_manager' %}
+                {% if user.is_superuser or user.role == 'admin' or user.role == 'sales_manager' %}
 
                 <li><a href="{% url 'leads:lead_list' %}" class="rounded-md">Leads</a></li>
 
@@ -52,6 +52,10 @@
             </a>
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'accounts:logout_view' %}">
                 Logout
+            </a>
+
+            <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'leads:activity_logs' %}">
+                Logs
             </a>
             <button class="btn btn-outline btn-sm w-full" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
                 🌓 Toggle Theme
