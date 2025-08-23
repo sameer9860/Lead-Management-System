@@ -1,25 +1,34 @@
-#Installation
-1. Clone the Repository
-git clone https://github.com/sameer9860/Lead-Management-System
+# 🚀 Lead Management System - Installation Guide
 
-2.cd lead-management-system(if you are in another dir)
+# 1. Clone the Repository
+git clone https://github.com/sameer9860/Lead-Management-System.git
 
-3. Set Up Virtual Environment
+cd Lead-Management-System
+
+# 2. Create Virtual Environment
 python -m venv env
 
-4.\env\Scripts\activate  # Windows
-source env/bin/activate  # macOS/Linux
+# 3. Activate Virtual Environment
+# Windows (PowerShell)
+.\env\Scripts\activate
+# windows(CMD)
+env\Scripts\activate
+# macOS/Linux
+source env/bin/activate
 
-5. Install Dependencies
+# 4. Install Dependencies
 pip install -r requirements.txt
 
-7. Apply Migrations
+# 5. Apply Database Migrations
 python manage.py migrate
 
-9. Create a Superuser (Admin)
+# 6. Create Superuser (Admin)
 python manage.py createsuperuser
-Follow the prompts to set up the admin account.
+# 👉 Follow the prompts to set up your admin account
 
-10. Run the Development Server
+# 7. Run Development Server
 python manage.py runserver
-Access the application at http://127.0.0.1:8000.
+
+# 8. Access the Application
+# Open your browser and go to:
+# http://127.0.0.1:8000
