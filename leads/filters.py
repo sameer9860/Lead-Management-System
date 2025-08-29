@@ -23,6 +23,21 @@ class LeadFilter(django_filters.FilterSet):
         widget=forms.Select(attrs={"class": "form-select"})
     )
 
+    # --- Date Range Filters ---
+    start_date = django_filters.DateFilter(
+        field_name="created_at",
+        lookup_expr="gte",
+        label="Start Date",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
+    
+    end_date = django_filters.DateFilter(
+        field_name="created_at",
+        lookup_expr="lte",
+        label="End Date",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"})
+    )
+
     class Meta:
         model = Lead
-        fields = ["name", "email", "status"]
+        fields = ["name", "email", "status", "start_date", "end_date"]
