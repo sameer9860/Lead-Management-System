@@ -23,7 +23,7 @@
                             <th scope="col">S.N</th> <!-- Serial Number Column -->
                             <th scope="col">👤 User</th>
                             <th scope="col">📝 Action</th>
-                            <th scope="col">📌 Lead</th>
+                            {% comment %} <th scope="col">📌 Lead</th> {% endcomment %}
                             <th scope="col">⏰ Timestamp</th>
                         </tr>
                     </thead>
@@ -47,16 +47,18 @@
                             </td>
 
                             <!-- Lead -->
-                            <td>
+                            {% comment %} <td>
                                 {% if log.lead %}
                                     <a href="{% url 'leads:lead_detail' log.lead.pk %}" 
                                        class="text-decoration-none fw-medium text-primary">
                                         {{ log.lead.name }}
                                     </a>
                                 {% else %}
-                                    <span class="text-muted">-</span>
+                                    <span class="badge bg-secondary rounded-pill">
+                                        N/A
+                                    </span>
                                 {% endif %}
-                            </td>
+                            </td> {% endcomment %}
 
                             <!-- Timestamp -->
                             <td>

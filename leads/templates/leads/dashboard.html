@@ -23,14 +23,14 @@
             <p class="display-6 font-bold text-3xl">{{ stats.new }}</p>
         </div>
 
-        <div class="card text-gray-800 shadow p-4" style="background-color: #f1c40f;"
+        <div class="card text-white-800 shadow p-4" style="background-color: #f1c40f;"
              onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
             <h2 class="text-lg font-semibold mb-2">In Progress Leads</h2>
             <p class="display-6 font-bold text-3xl">{{ stats.in_progress }}</p>
         </div>
 
         <div class="card text-white shadow p-4" style="background-color: #2ecc71;"
-             onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
             <h2 class="text-lg font-semibold mb-2">Converted Leads</h2>
             <p class="display-6 font-bold text-3xl">{{ stats.converted }}</p>
         </div>
@@ -55,13 +55,13 @@
 
         <!-- Leads Overview Bar Chart -->
         <div class="bg-white shadow rounded p-4">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Leads Overview</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-center color text-sky-400">Leads Overview</h2>
             <canvas id="leadsChart" width="400" height="250"></canvas>
         </div>
 
         <!-- Source Breakdown Pie Chart -->
         <div class="bg-white shadow rounded p-4">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Leads by Source</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-center color text-green-400">Leads by Source</h2>
             <canvas id="sourceChart" width="400" height="250"></canvas>
         </div>
 

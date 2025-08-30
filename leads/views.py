@@ -143,12 +143,12 @@ def lead_delete(request, pk):
         # Log deletion before actually deleting
         ActivityLog.objects.create(
             user=request.user,
-            action=f"Deleted lead {lead_name}",
-            lead=lead
+            lead=lead,
+            action=f"Deleted lead {lead_name}"
+            
         )
         
         lead.delete()
-        messages.success(request, f"Lead {lead_name} deleted successfully!")
         return redirect('leads:lead_list')
     
     return render(request, 'leads/lead_delete_confirm.html', {'lead': lead})
@@ -212,17 +212,35 @@ def add_note_ajax(request, lead_id):
 @login_required
 @require_http_methods(["DELETE"])
 def delete_note_ajax(request, note_id):
-    """AJAX endpoint to delete a note"""
+    """AJAX endpoint to delete a note - FIXED VERSION"""
     try:
         note = get_object_or_404(LeadNote, id=note_id)
         lead = note.lead
         
-        # Check if user can delete this note (only creator or admin)
-        if note.user != request.user and not request.user.is_staff:
+        # Fixed permission check - check for user role attribute properly
+        can_delete = False
+        
+        # Check if user is the creator of the note
+        if note.user == request.user:
+            can_delete = True
+        
+        # Check if user is superuser
+        elif request.user.is_superuser:
+            can_delete = True
+            
+        # Check if user is staff
+        elif request.user.is_staff:
+            can_delete = True
+            
+        # Check for custom role field (adjust based on your User model)
+        elif hasattr(request.user, 'role') and request.user.role == 'admin':
+            can_delete = True
+        
+        if not can_delete:
             return JsonResponse({
-                'success': False,
+                'success': False, 
                 'error': 'You do not have permission to delete this note'
-            })
+            }, status=403)
         
         # Log the activity before deletion
         ActivityLog.objects.create(
@@ -235,11 +253,17 @@ def delete_note_ajax(request, note_id):
         
         return JsonResponse({'success': True})
         
+    except LeadNote.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Note not found'
+        }, status=404)
     except Exception as e:
         return JsonResponse({
             'success': False,
-            'error': str(e)
-        })
+            'error': f'Server error: {str(e)}'
+        }, status=500)
+
 
 @login_required
 def get_notes_ajax(request, lead_id):
@@ -270,6 +294,44 @@ def get_notes_ajax(request, lead_id):
             'error': str(e)
         })
         
+        
+        
+@login_required
+def note_delete_confirm(request, note_id):
+    """Display confirmation page before deleting a note"""
+    note = get_object_or_404(LeadNote, id=note_id)
+    lead = note.lead
+    
+    # Check if user can delete this note
+    can_delete = (
+        note.user == request.user or 
+        request.user.is_superuser or 
+        request.user.is_staff or 
+        (hasattr(request.user, 'role') and request.user.role == 'admin')
+    )
+    
+    if not can_delete:
+        messages.error(request, 'You do not have permission to delete this note.')
+        return redirect('leads:lead_details', pk=lead.pk)
+    
+    if request.method == 'POST':
+        # Log the activity before deletion
+        ActivityLog.objects.create(
+            user=request.user,
+            action=f"Deleted note from lead {lead.name}",
+            lead=lead
+        )
+        
+        note.delete()
+        messages.success(request, 'Note deleted successfully!')
+        return redirect('leads:lead_details', pk=lead.pk)
+    
+    context = {
+        'note': note,
+        'lead': lead,
+    }
+    return render(request, 'leads/delete_confirm_notes.html', context)
+
         # leads/views.py
 
 def activity_logs(request):

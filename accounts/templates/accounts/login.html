@@ -2,146 +2,112 @@
 {% block content %}
 {% block sidebar %}{% endblock %}
 
-    
-<style>
-    body {
-        background: linear-gradient(135deg, #1e1e2f 0%, #2d3748 100%);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #f8f9fa;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Full height center */
-        margin: 0;
-    }
-    .login-container {
-        width: 100%;
-        max-width: 420px;
-        background: #2d2d3a;
-        padding: 35px;
-        border-radius: 12px;
-        box-shadow: 0px 8px 25px rgba(0,0,0,0.4);
-        animation: fadeIn 0.8s ease-in-out;
-    }
-    .login-container h2 {
-        text-align: center;
-        font-weight: 600;
-        margin-bottom: 25px;
-        color: #60a5fa; /* Tailwind sky-400 shade */
-    }
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 8px;
-        display: block;
-        color: #e5e7eb;
-    }
-    .form-control {
-        width: 100%;
-        border-radius: 8px;
-        padding: 10px;
-        border: 1px solid #444;
-        background: #1e1e2f;
-        color: #f8f9fa;
-        transition: 0.3s;
-    }
-    .form-control:focus {
-        border-color: #60a5fa;
-        outline: none;
-        box-shadow: 0 0 5px #60a5fa;
-    }
-    .btn-primary {
-        background: #60a5fa;
-        border: none;
-        border-radius: 8px;
-        font-weight: 500;
-        padding: 10px;
-        transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-        background: #3b82f6;
-        transform: translateY(-2px);
-    }
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 px-4 w-full">
+  <div class="max-w-md w-full bg-gray-800 p-9 rounded-xl shadow-lg animate-fadeIn">
+    <h2 class="text-center text-3xl font-semibold text-sky-400 mb-8">Login</h2>
 
-    /* Password toggle */
-    .password-wrapper {
-        position: relative;
-    }
-    .toggle-password {
-        position: absolute;
-        right: 12px;
-        top: 62%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        font-size: 1.1rem;
-        color: #9ca3af;
-        user-select: none;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
-
-<div class="login-container">
-    <div class="toast toast-end toast-top ">
-        {% for message in messages %}
-        <div class="alert alert-error alert-soft" style="color: #f44336; ">
-            <i class="fas fa-exclamation-triangle"></i>
-            <strong>Error:</strong>
-            <span>{{message}}</span>
-        </div>
-        {% endfor %}
+    <div class="space-y-4 mb-6">
+      {% for message in messages %}
+      <div class="bg-red-700 text-red-100 rounded-md p-3 flex items-center space-x-2">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span><strong>Error:</strong> {{ message }}</span>
+      </div>
+      {% endfor %}
     </div>
 
-    <h2>Login</h2>
-    <form method="post">
+    <form method="post" class="space-y-6" novalidate>
+      {% csrf_token %}
 
-        {% csrf_token %}
+      <!-- Username -->
+      <div>
+        <label for="id_username" class="block mb-2 text-gray-300 font-medium">Username</label>
+        <input type="text" name="username" id="id_username" required
+               class="w-full rounded-lg bg-gray-900 border border-gray-700 text-gray-100 placeholder-gray-400 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400 transition" />
+      </div>
 
-        <!-- Username -->
-        <div class="mb-3">
-            <label for="id_username" class="form-label">Username</label>
-            <input type="text" name="username" class="form-control" id="id_username" required>
-        </div>
-        <div class="mb-3 password-wrapper">
-            <label for="id_password" class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" id="id_password" required style="padding-right: 45px;">
-            <span class="toggle-password">
-                <!-- Eye (visible) icon - HIDDEN by default -->
-                <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                <!-- Eye with slash (hidden) icon - VISIBLE by default -->
-                <svg class="eye-slash-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                </svg>
-            </span>
-        </div>
-        <button type="submit" class="btn btn-primary w-90">Login</button>
+      <!-- Password -->
+      <div class="relative">
+        <label for="id_password" class="block mb-2 text-gray-300 font-medium">Password</label>
+        <input type="password" name="password" id="id_password" required
+               class="w-full rounded-lg bg-gray-900 border border-gray-700 text-gray-100 placeholder-gray-400 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-sky-400 transition" />
+        <span class="absolute right-3 top-[70%] -translate-y-1/2 cursor-pointer text-gray-400 select-none toggle-password" aria-label="Toggle password visibility" role="button" tabindex="0">
+          <!-- Eye icon (hidden by default) -->
+          <svg class="eye-icon hidden w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <!-- Eye slash icon (visible by default) -->
+          <svg class="eye-slash-icon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </span>
+      </div>
 
-        
+      <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 transition rounded-lg py-3 font-semibold text-white shadow-md">
+        Login
+      </button>
     </form>
+  </div>
+</div>
 
-        </div>
-        
-        <script>
-            document.querySelector('.toggle-password').addEventListener('click', function() {
-                const passwordInput = document.getElementById("id_password");
-                const eyeIcon = this.querySelector(".eye-icon");
-                const eyeSlashIcon = this.querySelector(".eye-slash-icon");
-                
-                if (passwordInput.type === "password") {
-                    passwordInput.type = "text";
-                    eyeSlashIcon.style.display = "none"; // Hide the slash icon
-                    eyeIcon.style.display = "block";     // Show the regular eye icon
-                } else {
-                    passwordInput.type = "password";
-                    eyeIcon.style.display = "none";      // Hide the regular eye icon
-                    eyeSlashIcon.style.display = "block"; // Show the slash icon
-                }
-            });
-            </script>
+<script>
+    // Password toggle logic (your existing code)
+    document.querySelector('.toggle-password').addEventListener('click', function() {
+      const passwordInput = document.getElementById("id_password");
+      const eyeIcon = this.querySelector(".eye-icon");
+      const eyeSlashIcon = this.querySelector(".eye-slash-icon");
+    
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeSlashIcon.classList.add("hidden");
+        eyeIcon.classList.remove("hidden");
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.classList.add("hidden");
+        eyeSlashIcon.classList.remove("hidden");
+      }
+    });
+    
+    // Focus password input on Enter key in username input
+    document.getElementById("id_username").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault(); // prevent form submit on Enter here
+        document.getElementById("id_password").focus();
+      }
+    });
+
+    //ajax for login
+    document.getElementById("login-form").addEventListener("submit", function(e){
+      e.preventDefault();
+      let formData = new FormData(this);
+  
+      fetch("{% url 'accounts:login' %}", {
+          method: "POST",
+          headers: {"X-Requested-With": "XMLHttpRequest"},
+          body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+          let msgDiv = document.getElementById("login-msg");
+          if(data.success){
+              msgDiv.innerHTML = `<p class="text-green-600">${data.redirect_url}</p>`;
+              window.location.href = data.redirect_url;
+          } else {
+              msgDiv.innerHTML = `<p class="text-red-600">${JSON.stringify(data.errors)}</p>`;
+          }
+      });
+  });
+    
+</script>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.8s ease-in-out forwards;
+  }
+</style>
 {% endblock %}

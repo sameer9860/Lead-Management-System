@@ -37,9 +37,10 @@ class LeadNote(models.Model):
 
 class ActivityLog(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    action = models.CharField(max_length=200)
-    lead = models.ForeignKey(Lead, on_delete=models.CASCADE, null=True, blank=True)
+    lead = models.ForeignKey("Lead", on_delete=models.SET_NULL, null=True, blank=True)
+    action = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username}: {self.action}"
+        return f"{self.user.username} - {self.action} ({self.timestamp:%Y-%m-%d %H:%M})"
+

@@ -18,6 +18,12 @@ urlpatterns = [
     path('ajax/lead/<int:lead_id>/notes/', views.get_notes_ajax, name='get_notes_ajax'),
     
     
+    path('note/<int:note_id>/delete/', views.note_delete_confirm, name='note_delete_confirm'),
+
+    
+    
     path("logs/", views.activity_logs, name="activity_logs"),   # global logs page
+    
+    
     path("<int:pk>/", views.lead_detail, name="lead_detail"),   # lead detail + logs
 ]

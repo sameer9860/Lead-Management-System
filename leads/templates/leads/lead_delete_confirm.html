@@ -1,78 +1,61 @@
-<!-- templates/leads/lead_delete_confirm.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Lead - {{ lead.name }}</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-4">
-        <!-- Navigation -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'leads:dashboard' %}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'leads:lead_list' %}">Leads</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'leads:lead_details' lead.pk %}">{{ lead.name }}</a></li>
-                <li class="breadcrumb-item active">Delete</li>
-            </ol>
-        </nav>
+{% extends "base.html" %}
+{% load static %}
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card border-danger">
-                    <div class="card-header bg-danger text-white">
-                        <h3><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h3>
-                    </div>
+{% block content %}
+<div class="flex-1 p-6">
+    <div class="max-w-3xl mx-auto">
+        <div class=" text-color-gray-900 shadow-xl">
+            <!-- Header -->
+            <div class="card-body">
+                <h3 class="text-2xl font-bold flex items-center gap-2 color-red-500">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Confirm Deletion
+                </h3>
+
+                <div class="alert bg-warning text-warning-content shadow-md mt-4">
+                    <i class="bi bi-exclamation-circle-fill text-xl mr-2"></i>
+                    <span><strong>Warning!</strong> This action cannot be undone.</span>
+                </div>
+
+                <p class="mt-4 text-lg">Are you sure you want to delete the following lead?</p>
+
+                <!-- Lead Card -->
+                <div class="card bg-base-100 text-base-content shadow mt-4">
                     <div class="card-body">
-                        <div class="alert alert-warning" role="alert">
-                            <i class="fas fa-warning"></i>
-                            <strong>Warning!</strong> This action cannot be undone.
-                        </div>
-                        
-                        <p>Are you sure you want to delete the following lead?</p>
-                        
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ lead.name }}</h5>
-                                <p class="card-text">
-                                    <strong>Email:</strong> {{ lead.email }}<br>
-                                    <strong>Phone:</strong> {{ lead.phone|default:"Not provided" }}<br>
-                                    <strong>Company:</strong> {{ lead.company|default:"Not provided" }}<br>
-                                    <strong>Status:</strong> {{ lead.get_status_display }}<br>
-                                    <strong>Created:</strong> {{ lead.created_at|date:"M d, Y H:i" }}
-                                </p>
-                            </div>
-                        </div>
-
-                        {% if lead.notes.count > 0 %}
-                        <div class="alert alert-info mt-3" role="alert">
-                            <i class="fas fa-info-circle"></i>
-                            This lead has <strong>{{ lead.notes.count }}</strong> note(s) that will also be deleted.
-                        </div>
-                        {% endif %}
-
-                        <div class="mt-4">
-                            <form method="post" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i> Yes, Delete Lead
-                                </button>
-                            </form>
-                            <a href="{% url 'leads:lead_details' lead.pk %}" class="btn btn-secondary ms-2">
-                                <i class="fas fa-times"></i> Cancel
-                            </a>
-                        </div>
+                        <h5 class="card-title text-lg font-semibold">{{ lead.name }}</h5>
+                        <p class="text-sm">
+                            <strong>Email:</strong> {{ lead.email }} <br>
+                            <strong>Phone:</strong> {{ lead.phone|default:"Not provided" }} <br>
+                            <strong>Company:</strong> {{ lead.company|default:"Not provided" }} <br>
+                            <strong>Status:</strong> {{ lead.get_status_display }} <br>
+                            <strong>Created:</strong> {{ lead.created_at|date:"M d, Y H:i" }}
+                        </p>
                     </div>
                 </div>
+
+                {% if lead.notes.count > 0 %}
+                <div class="alert bg-info text-info-content mt-4 shadow-md">
+                    <i class="bi bi-info-circle-fill text-xl mr-2"></i>
+                    This lead has <strong>{{ lead.notes.count }}</strong> note(s) that will also be deleted.
+                </div>
+                {% endif %}
+
+                <!-- Actions -->
+                <!-- Actions -->
+<div class="mt-6 flex gap-3">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-error btn-lg flex gap-2  ">
+            <i class="bi bi-trash "  "></i> Yes, Delete Lead
+        </button>
+    </form>
+    <a href="{% url 'leads:lead_details' lead.pk %}" class="btn btn-lg btn-outline">
+        <i class="bi bi-x-circle"></i> Cancel
+    </a>
+</div>
+
             </div>
         </div>
     </div>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+{% endblock content %}

@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-<!-- Keep only Font Awesome, remove Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <meta name="csrf-token" content="{{ csrf_token }}">
 
@@ -26,10 +25,8 @@
     }
 </style>
 
-<!-- Main Content Area -->
 <main class="flex-1 overflow-y-auto bg-gray-900 p-6">
     <div class="max-w-7xl mx-auto">
-        <!-- Messages -->
         {% if messages %}
             {% for message in messages %}
                 <div class="bg-gray-800 border border-gray-700 text-gray-100 p-4 rounded-lg mb-4 flex justify-between items-center" role="alert">
@@ -41,246 +38,261 @@
             {% endfor %}
         {% endif %}
 
-        <!-- Lead Information -->
-        <div class="bg-gray-800 rounded-lg shadow-lg mb-6">
-            <!-- Header -->
-            <div class="bg-gray-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
-                <h2 class="text-xl font-semibold text-white flex items-center">
-                    <i class="fas fa-user mr-3"></i>{{ lead.name }}
-                </h2>
-                <div>
-                    {% if lead.status == 'new' %}
-                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
-                    {% elif lead.status == 'in_progress' %}
-                        <span class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
-                    {% elif lead.status == 'converted' %}
-                        <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
-                    {% elif lead.status == 'lost' %}
-                        <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
-                    {% else %}
-                        <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Body -->
-            <div class="p-6">
-                <!-- Info Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center text-blue-400 font-medium mb-2">
-                            <i class="fas fa-envelope mr-2"></i>Email
-                        </div>
-                        {% if lead.email %}
-                            <a href="mailto:{{ lead.email }}" class="text-blue-400 hover:text-blue-300 truncate block">{{ lead.email }}</a>
-                        {% else %}
-                            <span class="text-gray-400">Not provided</span>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center text-blue-400 font-medium mb-2">
-                            <i class="fas fa-phone mr-2"></i>Phone
-                        </div>
-                        {% if lead.phone %}
-                            <a href="tel:{{ lead.phone }}" class="text-blue-400 hover:text-blue-300">{{ lead.phone }}</a>
-                        {% else %}
-                            <span class="text-gray-400">Not provided</span>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center text-blue-400 font-medium mb-2">
-                            <i class="fas fa-building mr-2"></i>Company
-                        </div>
-                        <span class="text-gray-100">{{ lead.company|default:"Not provided" }}</span>
-                    </div>
-                    
-                    <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center text-blue-400 font-medium mb-2">
-                            <i class="fas fa-source-code mr-2"></i>Source
-                        </div>
-                        <span class="text-gray-100">{{ lead.source|default:"Not specified" }}</span>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center text-blue-400 font-medium mb-2">
-                            <i class="fas fa-user-tie mr-2"></i>Assigned to
-                        </div>
-                        <span class="text-gray-100">{{ lead.assigned_to|default:"Unassigned" }}</span>
-                    </div>
-                    
-                    <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
-                        <div class="flex items-center text-blue-400 font-medium mb-2">
-                            <i class="fas fa-calendar mr-2"></i>Created
-                        </div>
-                        <span class="text-gray-100">{{ lead.created_at|date:"M d, Y H:i" }}</span>
-                    </div>
-                </div>
-                
-                <!-- Action buttons -->
-                <div class="flex flex-wrap gap-3">
-                    <a href="{% url 'leads:lead_list' %}" class="btn btn-ghost">
-                        <i class="fas fa-arrow-left mr-2"></i>Back to List
-                    </a>
-                    <a href="#" class="btn btn-primary">
-                        <i class="fas fa-edit mr-2"></i>Edit Lead
-                    </a>
-                    <a href="{% url 'leads:lead_delete' lead.pk %}" class="btn btn-error" onclick="return confirm('Are you sure you want to delete this lead?')">
-                        <i class="fas fa-trash mr-2"></i>Delete Lead
-                    </a>
-                </div>
-            </div>
-        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
-        <!-- Notes Section -->
-        <div class="bg-gray-800 rounded-lg shadow-lg">
-            <!-- Header -->
-            <div class="bg-gray-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-white flex items-center">
-                    <i class="fas fa-sticky-note mr-3"></i>Notes
-                </h3>
-                <div class="flex gap-2">
-                    <!-- Traditional form toggle -->
-                    <button class="btn btn-outline btn-sm" onclick="toggleTraditionalForm()">
-                        <i class="fas fa-edit mr-1"></i>Add Note (Form)
-                    </button>
-                    <!-- AJAX form button -->
-                    <button class="btn btn-warning btn-sm" onclick="openAddNoteModal()">
-                        <i class="fas fa-plus mr-1"></i>Add Note (Quick)
-                    </button>
-                </div>
-            </div>
-            
-            <div class="p-6">
-                <!-- Traditional Django Form (hidden by default) -->
-                <div id="traditional-note-form" class="hidden mb-6">
-                    <div class="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                        <h5 class="text-lg font-medium text-white mb-4">
-                            <i class="fas fa-edit mr-2"></i>Add Note (Traditional Form)
-                        </h5>
-                        <form method="post">
-                            {% csrf_token %}
-                            <div class="mb-4">
-                                <label for="{{ note_form.note.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
-                                    {{ note_form.note.label }}
-                                </label>
-                                <textarea name="{{ note_form.note.name }}" id="{{ note_form.note.id_for_label }}" 
-                                         class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                         rows="4" placeholder="Enter your note here...">{{ note_form.note.value|default:"" }}</textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save mr-2"></i>Save Note
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Notes List -->
-                <div id="notes-container">
-                    {% for note in notes %}
-                    <div class="note-item border-b border-gray-600 pb-4 mb-4 hover:bg-gray-700 p-4 rounded-lg transition-all duration-300" data-note-id="{{ note.id }}">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-grow">
-                                <div class="text-gray-100 whitespace-pre-wrap break-words mb-2">{{ note.note }}</div>
-                                <div class="text-sm text-gray-400">
-                                    <i class="fas fa-user mr-1"></i>by {{ note.user.first_name }} {{ note.user.last_name|default:note.user.username }}
-                                    <i class="fas fa-clock ml-4 mr-1"></i>on {{ note.created_at|date:"M d, Y H:i" }}
-                                </div>
-                            </div>
-                            {% if note.user == request.user or request.user.is_staff %}
-                            <button class="btn btn-sm btn-error delete-note-btn ml-4" data-note-id="{{ note.id }}">
-                                <i class="fas fa-trash"></i>
-                            </button>
+            <div class="lg:col-span-3">
+                <div class="bg-gray-800 rounded-lg shadow-lg">
+                    <div class="bg-gray-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-white flex items-center">
+                            <i class="fas fa-user mr-3"></i>{{ lead.name }}
+                        </h2>
+                        <div>
+                            {% if lead.status == 'new' %}
+                                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
+                            {% elif lead.status == 'in_progress' %}
+                                <span class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
+                            {% elif lead.status == 'converted' %}
+                                <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
+                            {% elif lead.status == 'lost' %}
+                                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
+                            {% else %}
+                                <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium">{{ lead.get_status_display }}</span>
                             {% endif %}
                         </div>
                     </div>
-                    {% empty %}
-                    <div id="no-notes-message" class="text-center text-gray-400 py-12">
-                        <i class="fas fa-sticky-note text-6xl mb-4 opacity-25"></i>
-                        <h5 class="text-xl mb-2">No notes added yet</h5>
-                        <p>Be the first to add a note for this lead!</p>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center text-blue-400 font-medium mb-2">
+                                    <i class="fas fa-envelope mr-2"></i>Email
+                                </div>
+                                {% if lead.email %}
+                                    <a href="mailto:{{ lead.email }}" class="text-blue-400 hover:text-blue-300 truncate block">{{ lead.email }}</a>
+                                {% else %}
+                                    <span class="text-gray-400">Not provided</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center text-blue-400 font-medium mb-2">
+                                    <i class="fas fa-phone mr-2"></i>Phone
+                                </div>
+                                {% if lead.phone %}
+                                    <a href="tel:{{ lead.phone }}" class="text-blue-400 hover:text-blue-300">{{ lead.phone }}</a>
+                                {% else %}
+                                    <span class="text-gray-400">Not provided</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center text-blue-400 font-medium mb-2">
+                                    <i class="fas fa-building mr-2"></i>Company
+                                </div>
+                                <span class="text-gray-100">{{ lead.company|default:"Not provided" }}</span>
+                            </div>
+                            
+                            <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center text-blue-400 font-medium mb-2">
+                                    <i class="fas fa-code-branch mr-2"></i>Source </div>
+                                <span class="text-gray-100">{{ lead.source|default:"Not specified" }}</span>
+                            </div>
+
+                            <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center text-blue-400 font-medium mb-2">
+                                    <i class="fas fa-user-tie mr-2"></i>Assigned to
+                                </div>
+                                <span class="text-gray-100">{{ lead.assigned_to|default:"Unassigned" }}</span>
+                            </div>
+                            
+                            <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center text-blue-400 font-medium mb-2">
+                                    <i class="fas fa-calendar mr-2"></i>Created
+                                </div>
+                                <span class="text-gray-100">{{ lead.created_at|date:"M d, Y H:i" }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-3 mt-6 border-t border-gray-700 pt-6">
+                            <a href="{% url 'leads:lead_list' %}" class="btn btn-ghost">
+                                <i class="fas fa-arrow-left mr-2"></i>Back to List
+                            </a>
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-edit mr-2"></i>Edit Lead
+                            </a>
+                            <a href="{% url 'leads:lead_delete' lead.pk %}" class="btn btn-error">
+                                <i class="fas fa-trash mr-2"></i>Delete Lead
+                            </a>
+                        </div>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
+
+            <div class="lg:col-span-2">
+                <div class="bg-gray-800 rounded-lg shadow-lg">
+                    <div class="bg-gray-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-white flex items-center">
+                            <i class="fas fa-sticky-note mr-3"></i>Notes
+                        </h3>
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm" onclick="toggleTraditionalForm()">
+                                <i class="fas fa-edit mr-1"></i>Add Note
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div id="traditional-note-form" class="hidden mb-6">
+                            <div class="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                                <h5 class="text-lg font-medium text-white mb-4">
+                                    <i class="fas fa-edit mr-2"></i>Add a New Note
+                                </h5>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-4">
+                                        <label for="{{ note_form.note.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+                                            {{ note_form.note.label }}
+                                        </label>
+                                        <textarea name="{{ note_form.note.name }}" id="{{ note_form.note.id_for_label }}" 
+                                                  class="w-full p-3 bg-gray-800 border border-gray-600 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                                  rows="4" placeholder="Enter your note here...">{{ note_form.note.value|default:"" }}</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save mr-2"></i>Save Note
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div id="notes-container">
+                            {% for note in notes %}
+                            <div class="note-item border-b border-gray-600 pb-4 mb-4 hover:bg-gray-700 p-4 rounded-lg transition-all duration-300" data-note-id="{{ note.id }}">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-grow">
+                                        <div class="text-gray-100 whitespace-pre-wrap break-words mb-2">{{ note.note }}</div>
+                                        <div class="text-sm text-gray-400">
+                                            <i class="fas fa-user mr-1"></i>by {{ note.user.first_name }} {{ note.user.last_name|default:note.user.username }}
+                                            <i class="fas fa-clock ml-4 mr-1"></i>on {{ note.created_at|date:"M d, Y H:i" }}
+                                        </div>
+                                    </div>
+                                    {% if note.user == request.user or user.role == 'admin' or request.user.is_superuser %}
+                                    <a href="{% url 'leads:note_delete_confirm' note.id %}" class="btn btn-sm btn-error ml-4">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div id="no-notes-message" class="text-center text-gray-400 py-12">
+                                <i class="fas fa-sticky-note text-6xl mb-4 opacity-25"></i>
+                                <h5 class="text-xl mb-2">No notes added yet</h5>
+                                <p>Be the first to add a note for this lead!</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </main>
 
-<!-- Add Note Modal (AJAX) -->
-<div id="addNoteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4">
-        <!-- Modal Header -->
-        <div class="bg-blue-600 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
-            <h5 class="text-lg font-semibold">
-                <i class="fas fa-plus mr-2"></i>Add Note (Quick)
-            </h5>
-            <button type="button" class="text-white hover:text-gray-200 text-2xl leading-none" onclick="closeAddNoteModal()">
-                ×
-            </button>
-        </div>
-        
-        <!-- Modal Body -->
-        <form id="add-note-form">
-            <div class="p-6">
-                <div class="mb-4">
-                    <label for="note-content" class="block text-sm font-medium text-gray-300 mb-2">Note Content</label>
-                    <textarea class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                              id="note-content" rows="5" placeholder="Enter your note here..." required></textarea>
-                    <div class="text-red-400 text-sm mt-1 hidden" id="note-error">Please enter a note.</div>
-                </div>
-                <div class="bg-blue-900 border border-blue-700 text-blue-100 p-3 rounded-lg">
-                    <i class="fas fa-info-circle mr-2"></i>This note will be added instantly without page refresh.
-                </div>
-            </div>
-            
-            <!-- Modal Footer -->
-            <div class="bg-gray-700 px-6 py-4 rounded-b-lg flex justify-end gap-3">
-                <button type="button" class="btn btn-ghost" onclick="closeAddNoteModal()">
-                    <i class="fas fa-times mr-2"></i>Cancel
-                </button>
-                <button type="submit" class="btn btn-primary" id="save-note-btn">
-                    <span class="loading loading-spinner loading-sm hidden mr-2"></span>
-                    <i class="fas fa-save mr-2"></i>Save Note
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+
 
 <script>
-    // CSRF Token setup
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    // CSRF Token setup - FIXED
+    function getCsrfToken() {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (csrfToken) {
+            return csrfToken.getAttribute('content');
+        }
+        // Fallback: try to get from cookie
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
     
-    // DOM Elements
-    const addNoteForm = document.getElementById('add-note-form');
-    const noteContent = document.getElementById('note-content');
-    const saveNoteBtn = document.getElementById('save-note-btn');
-    const notesContainer = document.getElementById('notes-container');
-    const noNotesMessage = document.getElementById('no-notes-message');
-    const noteError = document.getElementById('note-error');
+    // Global variable to store the note being deleted
+    let noteToDelete = null;
 
     // Lead ID from template
     const leadId = {{ lead.pk }};
 
     // Modal functions
-    function openAddNoteModal() {
-        document.getElementById('addNoteModal').classList.remove('hidden');
-        document.getElementById('addNoteModal').classList.add('flex');
+    function openDeleteModal(noteId, noteContent) {
+        noteToDelete = noteId;
+        
+        // Set the note preview text (truncate if too long)
+        const previewText = noteContent.length > 100 ? 
+            noteContent.substring(0, 100) + '...' : 
+            noteContent;
+        document.getElementById('notePreviewText').textContent = previewText;
+        
+        // Show modal with animation
+        const modal = document.getElementById('deleteNoteModal');
+        const modalContent = document.getElementById('deleteModalContent');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Animate modal appearance
+        setTimeout(() => {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
+        
+        // Prevent body scrolling
         document.body.style.overflow = 'hidden';
+        
+        // Focus on cancel button for accessibility
+        setTimeout(() => {
+            modal.querySelector('button').focus();
+        }, 100);
     }
 
-    function closeAddNoteModal() {
-        document.getElementById('addNoteModal').classList.add('hidden');
-        document.getElementById('addNoteModal').classList.remove('flex');
-        document.body.style.overflow = 'auto';
-        addNoteForm.reset();
-        noteContent.classList.remove('border-red-500');
-        noteError.classList.add('hidden');
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteNoteModal');
+        const modalContent = document.getElementById('deleteModalContent');
+        
+        // Animate modal disappearance
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+            
+            // Reset button state
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            confirmBtn.disabled = false;
+            confirmBtn.querySelector('.delete-text').style.display = 'inline';
+            confirmBtn.querySelector('.loading').classList.add('hidden');
+        }, 200);
+        
+        noteToDelete = null;
     }
+
+    function confirmDeleteNote() {
+        if (noteToDelete) {
+            performDeleteNote(noteToDelete);
+        }
+    }
+
+    // DOM Elements
+    const notesContainer = document.getElementById('notes-container');
+    const noNotesMessage = document.getElementById('no-notes-message');
 
     // Traditional form toggle
     function toggleTraditionalForm() {
@@ -288,143 +300,130 @@
         form.classList.toggle('hidden');
     }
 
-    // Add Note Form Submit
-    addNoteForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const content = noteContent.value.trim();
-        if (!content) {
-            noteContent.classList.add('border-red-500');
-            noteError.classList.remove('hidden');
-            return;
-        }
-        
-        // Show loading state
-        saveNoteBtn.disabled = true;
-        saveNoteBtn.querySelector('.loading').classList.remove('hidden');
-        
-        try {
-            const response = await fetch(`/leads/ajax/lead/${leadId}/add-note/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({
-                    note: content
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                // Add note to UI
-                addNoteToUI(data.note);
-                
-                // Reset form and close modal
-                closeAddNoteModal();
-                
-                // Show success message
-                showAlert('Note added successfully!', 'success');
-            } else {
-                showAlert(data.error || 'Failed to add note', 'error');
-            }
-        } catch (error) {
-            console.error('Error adding note:', error);
-            showAlert('An error occurred while adding the note', 'error');
-        } finally {
-            // Reset loading state
-            saveNoteBtn.disabled = false;
-            saveNoteBtn.querySelector('.loading').classList.add('hidden');
-        }
-    });
-
-    // Add note to UI
-    function addNoteToUI(note) {
-        // Hide no notes message if visible
-        if (noNotesMessage) {
-            noNotesMessage.remove();
-        }
-        
-        const noteHtml = `
-            <div class="note-item border-b border-gray-600 pb-4 mb-4 hover:bg-gray-700 p-4 rounded-lg transition-all duration-300 fade-in" data-note-id="${note.id}">
-                <div class="flex justify-between items-start">
-                    <div class="flex-grow">
-                        <div class="text-gray-100 whitespace-pre-wrap break-words mb-2">${escapeHtml(note.content)}</div>
-                        <div class="text-sm text-gray-400">
-                            <i class="fas fa-user mr-1"></i>by ${note.user_full_name}
-                            <i class="fas fa-clock ml-4 mr-1"></i>on ${note.created_at}
-                        </div>
-                    </div>
-                    <button class="btn btn-sm btn-error delete-note-btn ml-4" data-note-id="${note.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        notesContainer.insertAdjacentHTML('afterbegin', noteHtml);
-        
-        // Add event listener to new delete button
-        const newDeleteBtn = notesContainer.querySelector(`[data-note-id="${note.id}"] .delete-note-btn`);
-        if (newDeleteBtn) {
-            newDeleteBtn.addEventListener('click', handleDeleteNote);
-        }
-    }
-
-    // Delete note handler
+    // Delete note handler - FIXED VERSION
     async function handleDeleteNote(e) {
-        const noteId = e.currentTarget.getAttribute('data-note-id');
+        const button = e.currentTarget;
+        const noteId = button.getAttribute('data-note-id');
+        
+        console.log('Attempting to delete note ID:', noteId); // Debug log
         
         if (!confirm('Are you sure you want to delete this note?')) {
             return;
         }
         
         const noteElement = document.querySelector(`[data-note-id="${noteId}"]`);
+        if (!noteElement) {
+            console.error('Note element not found');
+            return;
+        }
+        
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         noteElement.style.opacity = '0.6';
         noteElement.style.pointerEvents = 'none';
         
         try {
-            const response = await fetch(`/leads/ajax/note/${noteId}/delete/`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRFToken': csrfToken
+            const csrfToken = getCsrfToken();
+            
+            if (!csrfToken) {
+                throw new Error('CSRF token not found');
+            }
+            
+            // Try multiple URL patterns to find the working one
+            const possibleUrls = [
+                `/leads/ajax/note/${noteId}/delete/`,
+                `/ajax/note/${noteId}/delete/`,
+                `{% url 'leads:delete_note_ajax' 0 %}`.replace('0', noteId)
+            ];
+            
+            let response;
+            let workingUrl;
+            
+            // Try each URL pattern
+            for (const url of possibleUrls) {
+                try {
+                    console.log('Trying URL:', url);
+                    response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    
+                    if (response.status !== 404) {
+                        workingUrl = url;
+                        break;
+                    }
+                } catch (urlError) {
+                    console.log('URL failed:', url, urlError);
+                    continue;
                 }
-            });
+            }
+            
+            if (!response || response.status === 404) {
+                throw new Error('No working URL found for note deletion');
+            }
+            
+            console.log('Working URL:', workingUrl);
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
             const data = await response.json();
+            console.log('Response data:', data); // Debug log
             
             if (data.success) {
-                noteElement.remove();
-                showAlert('Note deleted successfully!', 'success');
+                // Remove the note element with animation
+                noteElement.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    noteElement.remove();
+                    
+                    // Check if no notes left
+                    const remainingNotes = notesContainer.querySelectorAll('.note-item');
+                    if (remainingNotes.length === 0) {
+                        notesContainer.innerHTML = `
+                            <div id="no-notes-message" class="text-center text-gray-400 py-12">
+                                <i class="fas fa-sticky-note text-6xl mb-4 opacity-25"></i>
+                                <h5 class="text-xl mb-2">No notes added yet</h5>
+                                <p>Be the first to add a note for this lead!</p>
+                            </div>
+                        `;
+                    }
+                }, 300);
                 
-                // Check if no notes left
-                if (notesContainer.children.length === 0) {
-                    notesContainer.innerHTML = `
-                        <div id="no-notes-message" class="text-center text-gray-400 py-12">
-                            <i class="fas fa-sticky-note text-6xl mb-4 opacity-25"></i>
-                            <h5 class="text-xl mb-2">No notes added yet</h5>
-                            <p>Be the first to add a note for this lead!</p>
-                        </div>
-                    `;
-                }
+                showAlert('Note deleted successfully!', 'success');
             } else {
-                noteElement.style.opacity = '1';
-                noteElement.style.pointerEvents = 'auto';
-                showAlert(data.error || 'Failed to delete note', 'error');
+                throw new Error(data.error || 'Failed to delete note');
             }
         } catch (error) {
             console.error('Error deleting note:', error);
+            
+            // Reset button and note element state
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-trash"></i>';
             noteElement.style.opacity = '1';
             noteElement.style.pointerEvents = 'auto';
-            showAlert('An error occurred while deleting the note', 'error');
+            
+            showAlert(`Error deleting note: ${error.message}`, 'error');
         }
     }
 
-    // Add event listeners to existing delete buttons
-    document.querySelectorAll('.delete-note-btn').forEach(btn => {
-        btn.addEventListener('click', handleDeleteNote);
-    });
+    // Add event listeners to existing delete buttons - FIXED
+    function attachDeleteListeners() {
+        document.querySelectorAll('.delete-note-btn').forEach(btn => {
+            // Remove existing listener to prevent duplicates
+            btn.removeEventListener('click', handleDeleteNote);
+            // Add new listener
+            btn.addEventListener('click', handleDeleteNote);
+        });
+    }
+
+    // Initialize delete listeners
+    attachDeleteListeners();
 
     // Utility functions
     function escapeHtml(text) {
@@ -441,10 +440,15 @@
             info: 'bg-blue-800 border-blue-700 text-blue-100'
         };
         
+        const icon = type === 'success' ? 'fa-check-circle' : 
+                    type === 'error' ? 'fa-exclamation-circle' :
+                    type === 'warning' ? 'fa-exclamation-triangle' : 
+                    'fa-info-circle';
+        
         const alertHtml = `
             <div class="fixed top-4 right-4 ${alertColors[type]} border p-4 rounded-lg shadow-lg z-50 max-w-md" id="temp-alert">
                 <div class="flex justify-between items-center">
-                    <span><i class="fas fa-check-circle mr-2"></i>${message}</span>
+                    <span><i class="fas ${icon} mr-2"></i>${escapeHtml(message)}</span>
                     <button type="button" class="text-current hover:opacity-75 text-xl leading-none" onclick="this.parentElement.parentElement.remove()">
                         ×
                     </button>
@@ -463,26 +467,39 @@
         }, 5000);
     }
 
-    // Clear validation on input
-    noteContent.addEventListener('input', function() {
-        if (this.value.trim()) {
-            this.classList.remove('border-red-500');
-            noteError.classList.add('hidden');
-        }
-    });
-
     // Close modal on background click
-    document.getElementById('addNoteModal').addEventListener('click', function(e) {
+    document.getElementById('deleteNoteModal').addEventListener('click', function(e) {
         if (e.target === this) {
-            closeAddNoteModal();
+            closeDeleteModal();
         }
     });
 
     // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            closeAddNoteModal();
+            const modal = document.getElementById('deleteNoteModal');
+            if (!modal.classList.contains('hidden')) {
+                closeDeleteModal();
+            }
+        }
+    });
+
+    // Debug function to test CSRF token
+    console.log('CSRF Token:', getCsrfToken());
+    
+    // Debug function to test note deletion URLs
+    document.querySelectorAll('.delete-note-btn').forEach(btn => {
+        const noteId = btn.getAttribute('data-note-id');
+        console.log('Note ID:', noteId, 'Delete URL:', `/leads/ajax/note/${noteId}/delete/`);
+    });
+    // Optional: Submit form on Enter key inside textarea (without Shift)
+    const textarea = noteForm.querySelector('textarea[name="{{ note_form.note.name }}"]');
+    textarea.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            noteForm.requestSubmit();
         }
     });
 </script>
+    
 {% endblock %}
