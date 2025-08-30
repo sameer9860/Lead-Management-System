@@ -10,6 +10,7 @@ from .models import Lead, LeadNote, ActivityLog
 from .forms import LeadNoteForm, LeadForm
 from .filters import LeadFilter
 import json
+from django.db.models import Count, Q
 
 # Your existing views (keep these as they are, just add activity logging)
 
@@ -17,40 +18,29 @@ import json
 @login_required
 def dashboard(request):
     leads = Lead.objects.all()
-    
-    # Apply filter
     lead_filter = LeadFilter(request.GET, queryset=leads)
     filtered_leads = lead_filter.qs
-    
+
     # Stats by status
-    stats = {
-        "total": filtered_leads.count(),
-        "new": filtered_leads.filter(status="new").count(),
-        "in_progress": filtered_leads.filter(status="in_progress").count(),
-        "converted": filtered_leads.filter(status="converted").count(),
-        "lost": filtered_leads.filter(status="lost").count(),
-    }
-    
+    stats = filtered_leads.aggregate(
+        total=Count('id'),
+        new=Count('id', filter=Q(status='new')),
+        in_progress=Count('id', filter=Q(status='in_progress')),
+        converted=Count('id', filter=Q(status='converted')),
+        lost=Count('id', filter=Q(status='lost'))
+    )
+
     # Conversion rate
-    if stats["total"] > 0:
-        conversion_rate = round((stats["converted"] / stats["total"]) * 100, 2)
-    else:
-        conversion_rate = 0
+    conversion_rate = round((stats['converted'] / stats['total']) * 100, 2) if stats['total'] else 0
 
     # Source breakdown
-    # Assuming Lead model has a 'source' field (CharField or ChoiceField)
-    sources = filtered_leads.values_list('source', flat=True)
-    source_labels = list(set(sources))
-    source_data = []
-    for label in source_labels:
-        source_data.append(filtered_leads.filter(source=label).count())
-    
-    # Log dashboard access
-    ActivityLog.objects.create(
-        user=request.user,
-        action="Accessed dashboard"
-    )
-    
+    source_counts = filtered_leads.values('source').annotate(count=Count('id'))
+    source_labels = [item['source'] for item in source_counts]
+    source_data = [item['count'] for item in source_counts]
+
+    # Log access
+    ActivityLog.objects.create(user=request.user, action="Accessed dashboard")
+
     return render(request, "leads/dashboard.html", {
         "filter": lead_filter,
         "stats": stats,
@@ -123,7 +113,7 @@ def form(request):
             # Log lead creation
             ActivityLog.objects.create(
                 user=request.user,
-                action=f"Created lead {lead.name}",
+                action=f"Created lead {lead.name} with status {lead.status.capitalize()}",
                 lead=lead
             )
             
