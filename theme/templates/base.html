@@ -42,6 +42,8 @@
 
             {% endif %} 
 
+            <li><a href="{% url 'leads:reports' %}" class="rounded-md">Reports</a></li>
+
             
             </ul>
         </nav>
@@ -53,10 +55,11 @@
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'accounts:logout_view' %}">
                 Logout
             </a>
-
+            {% if user.is_superuser or user.role == 'admin' %}
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'leads:activity_logs' %}">
                 Logs
             </a>
+            {% endif %}
             <button class="btn btn-outline btn-sm w-full" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
                 🌓 Toggle Theme
             </button>

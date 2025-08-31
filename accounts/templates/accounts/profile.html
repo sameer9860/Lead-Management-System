@@ -67,6 +67,16 @@
         </span>
       </section>
 
+
+      <!-- Update Profile Button -->
+<div class="text-center mt-8">
+  <a href="{% url 'accounts:update_profile' %}" 
+     class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+    Update Profile
+  </a>
+</div>
+
+
     </div>
   </div>
 </div>
@@ -117,5 +127,5 @@ document.addEventListener("DOMContentLoaded", function() {
         return initials;
     }
 });
-</script>
+ </script>
 {% endblock %}

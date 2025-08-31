@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1e1e2f] to-[#2d3748] p-6 w-full">
+    <div class="w-full max-w-3xl bg-[#2d2d3a] rounded-xl shadow-xl p-10 text-gray-100 space-y-6">
+
+        <h2 class="text-center text-2xl font-bold text-blue-400 mb-8">Update Profile</h2>
+
+        <form id="updateForm" method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-2">{{ field.label }}</label>
+                    {% render_field field class="w-full rounded-lg border border-gray-600 bg-[#1e1e2f] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" %}
+                    {% if field.errors %}
+                        <p class="mt-2 text-sm text-red-400">{{ field.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        
+            <div id="update-msg" class="mt-4 text-center"></div>
+        
+            <button type="submit" class="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors">
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("updateForm");
+        const msgDiv = document.getElementById("update-msg");
+    
+        if (!form) return;
+    
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();  // prevent normal form submission
+    
+            const formData = new FormData(form);
+            msgDiv.innerHTML = `<p class="text-gray-400">Saving changes...</p>`;
+    
+            fetch("{% url 'accounts:update_profile' %}", {
+                method: "POST",
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    msgDiv.innerHTML = `<p class="text-green-500 font-semibold">${data.message}</p>`;
+            
+                    // Redirect after short delay
+                    if (data.redirect_url) {
+                        setTimeout(() => {
+                            window.location.href = data.redirect_url;
+                        }, 1000);  // 1 second delay
+                    }
+            
+                } else {
+                    let errorsHtml = "";
+                    for (const field in data.errors) {
+                        errorsHtml += `<p class="text-red-500 text-left">${field}: ${data.errors[field].join(", ")}</p>`;
+                    }
+                    msgDiv.innerHTML = errorsHtml;
+                }
+            })
+            
+            .catch(err => {
+                msgDiv.innerHTML = `<p class="text-red-500">An error occurred. Please try again.</p>`;
+                console.error(err);
+            });
+        });
+    });
+    </script>
+    
+
+{% endblock %}

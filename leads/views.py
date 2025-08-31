@@ -48,6 +48,11 @@ def dashboard(request):
         "source_labels": source_labels,
         "source_data": source_data,
     })
+    
+    
+@login_required
+def reports(request):
+    return render(request, "leads/reports.html")
 
 @login_required
 def lead_list(request):

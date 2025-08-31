@@ -19,4 +19,24 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ["username", "email", "first_name", "last_name", "phone_no", "address", "profile_pic", "role", "password1", "password2"]
 
 
-
+# Update profile form
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "phone_no",
+            "address",
+            "profile_pic",
+            
+        ]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "phone_no": forms.TextInput(attrs={"class": "form-control"}),
+            "address": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            "profile_pic": forms.ClearableFileInput(attrs={"class": "form-control"}),
+        }

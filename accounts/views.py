@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import CustomUserCreationForm
-from .models import CustomUser
-from django.contrib.auth import authenticate, login, logout
+from .forms import CustomUserCreationForm , CustomUserUpdateForm
+from django.contrib.auth import  login, logout
 from django.contrib.auth import views as auth_views
-from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from leads.models import ActivityLog
+from django.urls import reverse
+
 
 # def login_view(request):
 #     if request.user.is_authenticated:  # same as redirect_authenticated_user=True
@@ -134,3 +134,46 @@ def profile(request):
 
 
 
+@login_required
+def update_profile(request):
+    user = request.user
+
+    if request.method == "POST":
+        form = CustomUserUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            old_data = {field: getattr(user, field) for field in form.fields}  # capture old values
+            form.save()
+
+            # Log what changed
+            changed_fields = []
+            for field in form.fields:
+                old_value = old_data[field]
+                new_value = getattr(user, field)
+                if old_value != new_value:
+                    changed_fields.append(f"{field}: '{old_value}' → '{new_value}'")
+
+            action_text = "Updated profile"
+            if changed_fields:
+                action_text += " (" + ", ".join(changed_fields) + ")"
+
+            ActivityLog.objects.create(
+                user=user,
+                action=action_text
+            )
+
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+             return JsonResponse({
+        "success": True,
+        "message": "Profile updated successfully!",
+        "redirect_url": reverse("accounts:profile")  # send URL to frontend
+    })
+
+
+        else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"success": False, "errors": form.errors}, status=400)
+
+    else:
+        form = CustomUserUpdateForm(instance=user)
+
+    return render(request, "accounts/update_profile.html", {"form": form})
