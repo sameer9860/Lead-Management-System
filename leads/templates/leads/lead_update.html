@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="lead-container">
+
+    <div class="card shadow border-0 bg-dark lead-card">
+    
+        <div class="card-header bg-dark-purple text-white text-center py-3">
+            <h4 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i> {{ title }}</h4>
+        </div>
+
+        <div class="card-body p-6">
+
+            <form method="post" id="leadForm" action="{% url 'leads:lead_update_ajax' lead.id %}" class="space-y-8" novalidate>
+                {% csrf_token %}
+
+                <!-- Top Row: Personal Info & Company & Assignment -->
+                <div class="flex flex-col md:flex-row md:space-x-6">
+                    <!-- Personal Info -->
+                    <div class="md:w-1/2 space-y-4">
+                        <h6 class="text-white text-lg font-semibold flex items-center space-x-2 border-b-2 border-indigo-700 pb-1">
+                            <i class="bi bi-info-circle-fill text-indigo-500"></i>
+                            <span>Personal Information</span>
+                        </h6>
+
+                        <!-- Name -->
+                        <div>
+                            <label for="id_name" class="block text-sm font-semibold text-gray-300 mb-1">Full Name <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-person-fill"></i></span>
+                                {{ form.name|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="id_email" class="block text-sm font-semibold text-gray-300 mb-1">Email <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-envelope-fill"></i></span>
+                                {{ form.email|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div>
+                            <label for="id_phone" class="block text-sm font-semibold text-gray-300 mb-1">Phone</label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-telephone-fill"></i></span>
+                                {{ form.phone|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company & Assignment -->
+                    <div class="md:w-1/2 space-y-4 mt-8 md:mt-0">
+                        <h6 class="text-white text-lg font-semibold flex items-center space-x-2 border-b-2 border-indigo-700 pb-1">
+                            <i class="bi bi-building-fill text-indigo-500"></i>
+                            <span>Company & Assignment</span>
+                        </h6>
+
+                        <!-- Company -->
+                        <div>
+                            <label for="id_company" class="block text-sm font-semibold text-gray-300 mb-1">Company <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-building-fill"></i></span>
+                                {{ form.company|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+
+                        <!-- Assigned To -->
+                        <div>
+                            <label for="id_assigned_to" class="block text-sm font-semibold text-gray-300 mb-1">Assign To</label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-person-check-fill"></i></span>
+                                {{ form.assigned_to|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lead Source & Status -->
+                <div class="mt-8 space-y-4">
+                    <h6 class="text-white text-lg font-semibold flex items-center space-x-2 border-b-2 border-indigo-700 pb-1">
+                        <i class="bi bi-funnel-fill text-indigo-500"></i>
+                        <span>Lead Source & Status</span>
+                    </h6>
+
+                    <div class="flex flex-col md:flex-row md:space-x-6">
+                        <div class="w-full md:w-1/2">
+                            <label for="id_source" class="block text-sm font-semibold text-gray-300 mb-1">Lead Source</label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-link-45deg"></i></span>
+                                {{ form.source|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-1/2">
+                            <label for="id_status" class="block text-sm font-semibold text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-activity"></i></span>
+                                {{ form.status|add_class:"w-full bg-gray-800 text-white rounded-r-md p-2" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button type="submit" class="btn btn-success px-6 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition">
+                        <i class="bi bi-check-circle-fill mr-2"></i> Save Lead
+                    </button>
+                    <button type="reset" class="btn btn-secondary px-6 py-2 text-gray-300 bg-gray-700 rounded-md hover:bg-gray-600 transition">
+                        <i class="bi bi-x-circle-fill mr-2"></i> Cancel
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- AJAX -->
+<script>
+document.getElementById("leadForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    let form = this;
+
+    fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect_url; // redirect here
+        } else {
+            alert("Error: " + JSON.stringify(data.errors || data.message));
+        }
+    })
+    
+    .catch(err => console.error(err));
+});
+</script>
+
+<style>
+body { background: linear-gradient(135deg, #1e1e2f 0%, #2d3748 100%) !important; }
+.lead-container { min-height: 100vh; padding: 50px 0; width: 100%; }
+.lead-card { max-width: 1000px; margin: auto; border-radius: .5rem; border: 1px solid #3a3d42; }
+.bg-dark-purple { background-color: #4A2C83 !important; }
+</style>
+{% endblock %}

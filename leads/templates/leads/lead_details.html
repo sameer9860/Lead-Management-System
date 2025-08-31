@@ -117,7 +117,7 @@
                             <a href="{% url 'leads:lead_list' %}" class="btn btn-ghost">
                                 <i class="fas fa-arrow-left mr-2"></i>Back to List
                             </a>
-                            <a href="#" class="btn btn-primary">
+                            <a href="{% url 'leads:lead_update_view' lead.pk %}" class="btn btn-primary">
                                 <i class="fas fa-edit mr-2"></i>Edit Lead
                             </a>
                             <a href="{% url 'leads:lead_delete' lead.pk %}" class="btn btn-error">

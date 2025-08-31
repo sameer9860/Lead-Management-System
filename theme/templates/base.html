@@ -25,27 +25,72 @@
         </div>
 
         <nav class="flex-grow p-4">
-            <ul class="menu menu-vertical space-y-2">
-                <li><a href="{% url 'leads:dashboard' %}" class="rounded-md">Dashboard</a></li>
+       <ul class="menu menu-vertical space-y-2">
+    <li>
+        <a href="{% url 'leads:dashboard' %}" class="flex items-center gap-2 rounded-md">
+            <!-- Heroicon: Home -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 9.75l9-7.5 9 7.5M4.5 10.5V21h15V10.5M9 21V12h6v9"/>
+            </svg>
+            Dashboard
+        </a>
+    </li>
 
-                {% if user.is_superuser or user.role == 'admin'  %}
-                    <li><a href="{% url 'accounts:register' %}" class="rounded-md">Register</a></li>
+    {% if user.is_superuser or user.role == 'admin' %}
+        <li>
+            <a href="{% url 'accounts:register' %}" class="flex items-center gap-2 rounded-md">
+                <!-- Heroicon: User Add -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M18 9v3m0 0v3m0-3h3m-3 0h-3M15 21a6 6 0 10-12 0h12zm6-10a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+                Register User
+            </a>
+        </li>
 
-                    <li><a href="{% url 'leads:form' %}" class="rounded-md">Create Lead</a></li>
+        <li>
+            <a href="{% url 'leads:form' %}" class="flex items-center gap-2 rounded-md">
+                <!-- Heroicon: Plus Circle -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Create Lead
+            </a>
+        </li>
+    {% endif %}
 
-                    
-                {% endif %}
+    {% if user.is_superuser or user.role == 'admin' or user.role == 'sales_manager' %}
+        <li>
+            <a href="{% url 'leads:lead_list' %}" class="flex items-center gap-2 rounded-md">
+                <!-- Heroicon: Clipboard List -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 5h6M9 9h6M9 13h6M9 17h6M5 7h.01M5 11h.01M5 15h.01M5 19h.01"/>
+                </svg>
+                Leads
+            </a>
+        </li>
+    {% endif %}
 
-                {% if user.is_superuser or user.role == 'admin' or user.role == 'sales_manager' %}
+    <li>
+        <a href="{% url 'leads:reports' %}" class="flex items-center gap-2 rounded-md">
+            <!-- Heroicon: Chart Bar -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 17v-6h3v6h4v-9h3L12 4 5 11h3v6z"/>
+            </svg>
+            Reports
+        </a>
+    </li>
+</ul>
 
-                <li><a href="{% url 'leads:lead_list' %}" class="rounded-md">Leads</a></li>
-
-            {% endif %} 
-
-            <li><a href="{% url 'leads:reports' %}" class="rounded-md">Reports</a></li>
-
-            
-            </ul>
         </nav>
 
         <div class="p-4 border-t border-base-300">

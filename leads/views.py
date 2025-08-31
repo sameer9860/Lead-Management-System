@@ -4,14 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
-from django.db.models import Count
-from django.utils import timezone
+from django.db.models import Count,Q
 from .models import Lead, LeadNote, ActivityLog
 from .forms import LeadNoteForm, LeadForm
 from .filters import LeadFilter
 import json
-from django.db.models import Count, Q
-
+from django.urls import reverse
 # Your existing views (keep these as they are, just add activity logging)
 
 
@@ -52,7 +50,13 @@ def dashboard(request):
     
 @login_required
 def reports(request):
-    return render(request, "leads/reports.html")
+   
+    # # Log report access
+    # ActivityLog.objects.create(
+    #     user=request.user,
+    #     action="Viewed reports"
+    # )
+    return render(request, "leads/reports.html" )
 
 @login_required
 def lead_list(request):
@@ -147,6 +151,39 @@ def lead_delete(request, pk):
         return redirect('leads:lead_list')
     
     return render(request, 'leads/lead_delete_confirm.html', {'lead': lead})
+
+
+
+
+@login_required
+def lead_update_view(request, pk):
+    """Render the form page for editing a lead."""
+    lead = get_object_or_404(Lead, pk=pk)
+    form = LeadForm(instance=lead)
+    return render(request, "leads/lead_update.html", {"form": form, "lead": lead, "title": "Update Lead"})
+
+
+@login_required
+def lead_update_ajax(request, pk):
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        lead = get_object_or_404(Lead, pk=pk)
+        form = LeadForm(request.POST, instance=lead)
+        if form.is_valid():
+            updated_lead = form.save()
+            ActivityLog.objects.create(
+                user=request.user,
+                lead=updated_lead,
+                action=f"Updated lead {updated_lead.name} with status {updated_lead.status.capitalize()}"
+            )
+            # send redirect URL in JSON
+            return JsonResponse({
+                "success": True,
+                "redirect_url": reverse("leads:lead_list")
+            })
+        else:
+            return JsonResponse({"success": False, "errors": form.errors}, status=400)
+
+    return JsonResponse({"success": False, "message": "Invalid request"}, status=400)
 
 # NEW AJAX Views - Add these to your existing views.py
 
