@@ -29,6 +29,12 @@ python manage.py createsuperuser
 # 7. Run Development Server
 python manage.py runserver
 
-# 8. Access the Application
+# 8. Run Tailwind Server
+python manage.py tailwind start 
+
+# 9.Run Tailwind and django server at once 
+python manage.py tailwind dev
+
+# 10. Access the Application
 # Open your browser and go to:
 # http://127.0.0.1:8000
