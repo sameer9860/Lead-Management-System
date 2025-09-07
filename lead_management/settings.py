@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'leads',
     'tailwind',
     'theme',
-    'widget_tweaks',  # For customizing form widgets in templates
-    
+    'widget_tweaks', 
+    'background_task',    
 ]
 
 MIDDLEWARE = [
@@ -83,18 +83,13 @@ WSGI_APPLICATION = 'lead_management.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lead_db',          
-        'USER': 'root',        
-        'PASSWORD': '',
-        'HOST': 'localhost',     
-        'PORT': '3306',     
-         
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
@@ -147,3 +142,17 @@ LOGIN_REDIRECT_URL = 'leads:dashboard'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# MailHog SMTP settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = "Lead_Management_System@localhost"
+
+
+
