@@ -50,6 +50,11 @@
                 Register User
             </a>
         </li>
+    {% endif %}
+
+
+
+        {% if user.is_superuser or user.role == 'admin' or user.role == 'sales_manager' %}
 
         <li>
             <a href="{% url 'leads:form' %}" class="flex items-center gap-2 rounded-md">
@@ -62,9 +67,9 @@
                 Create Lead
             </a>
         </li>
-    {% endif %}
+        {% endif %}
 
-    {% if user.is_superuser or user.role == 'admin' or user.role == 'sales_manager' %}
+
         <li>
             <a href="{% url 'leads:lead_list' %}" class="flex items-center gap-2 rounded-md">
                 <!-- Heroicon: Clipboard List -->
@@ -76,7 +81,6 @@
                 Leads
             </a>
         </li>
-    {% endif %}
 
     <li>
         <a href="{% url 'leads:reports' %}" class="flex items-center gap-2 rounded-md">
@@ -96,6 +100,9 @@
         <div class="p-4 border-t border-base-300">
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'accounts:profile' %}">
                 Profile
+            </a>
+            <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'leads:change_password' %}">
+                Change Password
             </a>
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'accounts:logout_view' %}">
                 Logout

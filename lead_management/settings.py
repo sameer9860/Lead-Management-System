@@ -117,8 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 # settings.py
-USE_TZ = True   # keep this True so Django stores in UTC
-TIME_ZONE = "Asia/Kathmandu"
+USE_TZ = True
+TIME_ZONE = 'Asia/Kathmandu'
 
 
 USE_I18N = True

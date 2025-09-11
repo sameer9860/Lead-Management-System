@@ -14,6 +14,7 @@ urlpatterns = [
      path("<int:pk>/update/", views.lead_update_view, name="lead_update_view"),
     path("<int:pk>/update-ajax/", views.lead_update_ajax, name="lead_update_ajax"),
     path("reports/", views.reports, name='reports'),
+    path("change-password/", views.change_password, name="change_password"),
     
     # New AJAX endpoints
     path('ajax/lead/<int:lead_id>/add-note/', views.add_note_ajax, name='add_note_ajax'),

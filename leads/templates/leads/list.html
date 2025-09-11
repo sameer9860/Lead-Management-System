@@ -65,9 +65,11 @@
                         <!-- Delete -->
                         <form method="post" action="#" style="display:inline;">
                             {% csrf_token %}
+                            {% if request.user.is_superuser or request.user.role == 'admin'  or request.user.role == 'sales_manager' %}
                             <a href="{% url 'leads:lead_delete' lead.pk %}" class="btn btn-danger">
                                 <i class="bi bi-trash"></i>
                             </a>
+                            {% endif %}
                         </form>
                     </td>
                 </tr>

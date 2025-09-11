@@ -10,6 +10,8 @@ from .forms import LeadNoteForm, LeadForm
 from .filters import LeadFilter
 import json
 from django.urls import reverse
+from .forms import SetPasswordForm
+from django.contrib.auth import update_session_auth_hash
 # Your existing views (keep these as they are, just add activity logging)
 
 
@@ -50,13 +52,38 @@ def dashboard(request):
     
 @login_required
 def reports(request):
-   
-    # # Log report access
-    # ActivityLog.objects.create(
-    #     user=request.user,
-    #     action="Viewed reports"
-    # )
-    return render(request, "leads/reports.html" )
+    leads = Lead.objects.all()
+    lead_filter = LeadFilter(request.GET, queryset=leads)
+    filtered_leads = lead_filter.qs
+
+    # Stats by status
+    stats = filtered_leads.aggregate(
+        total=Count('id'),
+        new=Count('id', filter=Q(status='new')),
+        in_progress=Count('id', filter=Q(status='in_progress')),
+        converted=Count('id', filter=Q(status='converted')),
+        lost=Count('id', filter=Q(status='lost'))
+    )
+
+    # Conversion rate
+    conversion_rate = round((stats['converted'] / stats['total']) * 100, 2) if stats['total'] else 0
+
+    # Source breakdown
+    source_counts = filtered_leads.values('source').annotate(count=Count('id'))
+    source_labels = [item['source'] for item in source_counts]
+    source_data = [item['count'] for item in source_counts]
+
+    # Log access
+    ActivityLog.objects.create(user=request.user, action="Accessed reports")
+
+    return render(request, "leads/reports.html", {
+        "filter": lead_filter,
+        "stats": stats,
+        "conversion_rate": conversion_rate,
+        "source_labels": source_labels,
+        "source_data": source_data,
+    })
+
 
 @login_required
 def lead_list(request):
@@ -115,21 +142,22 @@ def lead_details(request, pk):
 @login_required
 def form(request):
     if request.method == "POST":
-        form = LeadForm(request.POST)
+        form = LeadForm(request.POST, user=request.user)  # pass user
         if form.is_valid():
             lead = form.save()
-            
+
             # Log lead creation
             ActivityLog.objects.create(
                 user=request.user,
                 action=f"Created lead {lead.name} with status {lead.status.capitalize()}",
                 lead=lead
             )
-            
+
             messages.success(request, f"Lead {lead.name} created successfully!")
             return redirect("leads:lead_list")
     else:
-        form = LeadForm()
+        form = LeadForm(user=request.user)  # pass user
+
     return render(request, "leads/form.html", {"form": form, "title": "Create Lead"})
 
 @login_required
@@ -363,6 +391,22 @@ def note_delete_confirm(request, note_id):
         'lead': lead,
     }
     return render(request, 'leads/delete_confirm_notes.html', context)
+
+
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        form = SetPasswordForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # keep user logged in after password change
+            # messages.success(request, "Your password was changed successfully!")
+            return redirect("leads:dashboard")  # change "dashboard" to your dashboard URL name
+    else:
+        form = SetPasswordForm(request.user)
+
+    return render(request, "leads/change_password.html", {"form": form})
 
         # leads/views.py
 

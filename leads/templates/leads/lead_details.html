@@ -120,9 +120,11 @@
                             <a href="{% url 'leads:lead_update_view' lead.pk %}" class="btn btn-primary">
                                 <i class="fas fa-edit mr-2"></i>Edit Lead
                             </a>
+                            {% if request.user.is_superuser or request.user.role == 'admin'  or request.user.role == 'sales_manager' %}
                             <a href="{% url 'leads:lead_delete' lead.pk %}" class="btn btn-error">
                                 <i class="fas fa-trash mr-2"></i>Delete Lead
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
