@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="flex-1 p-6">
+    <div class="max-w-3xl mx-auto">
+        <div class=" text-color-gray-900 shadow-xl">
+            <!-- Header -->
+            <div class="card-body">
+                <h3 class="text-2xl font-bold flex items-center gap-2 color-red-500">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Confirm Deletion
+                </h3>
+
+                <div class="alert bg-warning text-warning-content shadow-md mt-4">
+                    <i class="bi bi-exclamation-circle-fill text-xl mr-2"></i>
+                    <span><strong>Warning!</strong> This action cannot be undone.</span>
+                </div>
+
+                <p class="mt-4 text-lg">Are you sure you want to delete the following lead?</p>
+
+                <!-- Lead Card -->
+                <div class="card bg-base-100 text-base-content shadow mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-lg font-semibold">{{ lead.name }}</h5>
+                        <p class="text-sm">
+                            <strong>Email:</strong> {{ lead.email }} <br>
+                            <strong>Phone:</strong> {{ lead.phone|default:"Not provided" }} <br>
+                            <strong>Company:</strong> {{ lead.company|default:"Not provided" }} <br>
+                            <strong>Status:</strong> {{ lead.get_status_display }} <br>
+                            <strong>Created:</strong> {{ lead.created_at|date:"M d, Y H:i" }}
+                        </p>
+                    </div>
+                </div>
+
+                {% if lead.notes.count > 0 %}
+                <div class="alert bg-info text-info-content mt-4 shadow-md">
+                    <i class="bi bi-info-circle-fill text-xl mr-2"></i>
+                    This lead has <strong>{{ lead.notes.count }}</strong> note(s) that will also be deleted.
+                </div>
+                {% endif %}
+
+                <!-- Actions -->
+                <!-- Actions -->
+<div class="mt-6 flex gap-3">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-error btn-lg flex gap-2  ">
+            <i class="bi bi-trash "  "></i> Yes, Delete Lead
+        </button>
+    </form>
+    <a href="{% url 'leads:lead_details' lead.pk %}" class="btn btn-lg btn-outline">
+        <i class="bi bi-x-circle"></i> Cancel
+    </a>
+</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static tailwind_tags %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<main class="flex-grow p-6 overflow-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Reports</h1>
+
+    <!-- Conversion Rate Card -->
+    <div class="bg-white shadow rounded p-6 mb-8 text-center">
+        <h2 class="text-2xl font-semibold mb-2 text-red-500">Conversion Rate</h2>
+        <p class="text-4xl font-bold text-red-500">{{ conversion_rate }}%</p>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Leads Overview Chart -->
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-xl font-semibold mb-4 text-blue-500">Leads Overview</h2>
+            <canvas id="leadsChart"></canvas>
+        </div>
+
+        <!-- Source Breakdown -->
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-xl font-semibold mb-4 text-green-500">Leads by Source</h2>
+            <canvas id="sourceChart"></canvas>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    new Chart(document.getElementById('leadsChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Total', 'New', 'In Progress', 'Converted', 'Lost'],
+            datasets: [{
+                label: 'Leads Count',
+                data: [
+                    {{ stats.total }},
+                    {{ stats.new }},
+                    {{ stats.in_progress }},
+                    {{ stats.converted }},
+                    {{ stats.lost }}
+                ],
+                backgroundColor: ['#3498db','#e74c3c','#f1c40f','#2ecc71','#95a5a6']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('sourceChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ source_labels|safe }},
+            datasets: [{
+                data: {{ source_data|safe }},
+                backgroundColor: ['#3498db','#e74c3c','#f1c40f','#2ecc71','#9b59b6','#95a5a6']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'right' } } }
+    });
+</script>
+{% endblock %}

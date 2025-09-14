@@ -1,0 +1,121 @@
+ {% extends 'base.html' %}
+{% load static tailwind_tags %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<main class="flex-grow p-6 overflow-auto">
+
+    <h1 class="text-3xl font-bold mb-6 text-center">LMS Dashboard</h1>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+
+        <div class="card text-white shadow p-4" style="background-color: #3498db;"
+             onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Total Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.total }}</p>
+        </div>
+
+        <div class="card text-white shadow p-4" style="background-color: #e74c3c;"
+             onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">New Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.new }}</p>
+        </div>
+
+        <div class="card text-white-800 shadow p-4" style="background-color: #f1c40f;"
+             onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">In Progress Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.in_progress }}</p>
+        </div>
+
+        <div class="card text-white shadow p-4" style="background-color: #2ecc71;"
+            onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Converted Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.converted }}</p>
+        </div>
+
+        <div class="card text-white shadow p-4" style="background-color: #95a5a6;"
+             onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Lost Leads</h2>
+            <p class="display-6 font-bold text-3xl">{{ stats.lost }}</p>
+        </div>
+
+        <!-- Conversion Rate Card -->
+        <div class="card text-white shadow p-4" style="background-color: #9b59b6;"
+             onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <h2 class="text-lg font-semibold mb-2">Conversion Rate</h2>
+            <p class="display-6 font-bold text-3xl">{{ conversion_rate }}%</p>
+        </div>
+
+    </div>
+
+    <!-- Charts Side by Side -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+
+        <!-- Leads Overview Bar Chart -->
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-2xl font-semibold mb-4 text-center color text-sky-400">Leads Overview</h2>
+            <canvas id="leadsChart" width="400" height="250"></canvas>
+        </div>
+
+        <!-- Source Breakdown Pie Chart -->
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-2xl font-semibold mb-4 text-center color text-green-400">Leads by Source</h2>
+            <canvas id="sourceChart" width="400" height="250"></canvas>
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+    // Leads Overview Bar Chart
+    const ctx = document.getElementById('leadsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Total', 'New', 'In Progress', 'Converted', 'Lost'],
+            datasets: [{
+                label: 'Leads Count',
+                data: [
+                    {{ stats.total }},
+                    {{ stats.new }},
+                    {{ stats.in_progress }},
+                    {{ stats.converted }},
+                    {{ stats.lost }}
+                ],
+                backgroundColor: [
+                    '#3498db',
+                    '#e74c3c',
+                    '#f1c40f',
+                    '#2ecc71',
+                    '#95a5a6'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false }, tooltip: { enabled: true } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // Leads Source Pie Chart
+    const sourceCtx = document.getElementById('sourceChart').getContext('2d');
+    new Chart(sourceCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ source_labels|safe }},
+            datasets: [{
+                data: {{ source_data|safe }},
+                backgroundColor: ['#3498db','#e74c3c','#f1c40f','#2ecc71','#9b59b6','#95a5a6']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'right' }, tooltip: { enabled: true } }
+        }
+    });
+</script>
+{% endblock %} 

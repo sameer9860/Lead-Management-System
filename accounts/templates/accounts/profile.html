@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex-1 overflow-y-auto p-8">
+  <div class="max-w-4xl mx-auto bg-base-100 shadow-xl rounded-2xl p-6">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <div class="relative inline-block">
+        <!-- Profile Picture -->
+        <img id="profile-img" class="w-32 h-32 rounded-full border-4 border-base-200 shadow-lg object-cover hidden">
+        <!-- Initials fallback -->
+        <div id="profile-initials" class="w-32 h-32 flex items-center justify-center text-white text-4xl font-extrabold 
+            rounded-full shadow-lg border-4 border-base-200 bg-gradient-to-r from-pink-500 to-purple-600 hidden">
+        </div>
+      </div>
+
+      <h1 id="profile-name" class="text-3xl font-extrabold mt-6 text-primary"></h1>
+      <p id="profile-username" class="text-gray-500"></p>
+    </div>
+
+    <!-- Sections -->
+    <div class="space-y-8">
+
+      <!-- Contact Info -->
+      <section>
+        <h2 class="text-xl font-semibold text-primary border-b pb-2 mb-4">Contact Information</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-base-200 rounded-xl p-4">
+            <p class="text-gray-500">Email</p>
+            <p id="profile-email" class="font-semibold"></p>
+          </div>
+          <div class="bg-base-200 rounded-xl p-4">
+            <p class="text-gray-500">Phone</p>
+            <p id="profile-phone" class="font-semibold"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personal Details -->
+      <section>
+        <h2 class="text-xl font-semibold text-primary border-b pb-2 mb-4">Personal Details</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-base-200 rounded-xl p-4">
+            <p class="text-gray-500">First Name</p>
+            <p id="profile-first" class="font-semibold"></p>
+          </div>
+          <div class="bg-base-200 rounded-xl p-4">
+            <p class="text-gray-500">Last Name</p>
+            <p id="profile-last" class="font-semibold"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Address -->
+      <section>
+        <h2 class="text-xl font-semibold text-primary border-b pb-2 mb-4">Address</h2>
+        <div class="bg-base-200 rounded-xl p-4">
+          <p id="profile-address" class="font-semibold whitespace-pre-line"></p>
+        </div>
+      </section>
+
+      <!-- Role -->
+      <section class="text-center">
+        <h2 class="text-xl font-semibold text-primary border-b pb-2 mb-4">Role</h2>
+        <span id="profile-role" class="inline-block bg-primary text-white px-6 py-2 rounded-full font-semibold">
+        </span>
+      </section>
+
+
+      <!-- Update Profile Button -->
+<div class="text-center mt-8">
+  <a href="{% url 'accounts:update_profile' %}" 
+     class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+    Update Profile
+  </a>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    fetch("{% url 'accounts:profile' %}", {
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Profile picture
+        if (data.profile_pic) {
+            document.getElementById("profile-img").src = data.profile_pic;
+            document.getElementById("profile-img").classList.remove("hidden");
+        } else {
+            const initialsDiv = document.getElementById("profile-initials");
+            initialsDiv.textContent = getInitials(data.first_name, data.last_name);
+            initialsDiv.classList.remove("hidden");
+        }
+
+        // Full Name & Username
+        document.getElementById("profile-name").textContent = data.first_name && data.last_name ?
+            `${data.first_name} ${data.last_name}` : data.username;
+        document.getElementById("profile-username").textContent = "@" + data.username;
+
+        // Contact Info
+        document.getElementById("profile-email").textContent = data.email;
+        document.getElementById("profile-phone").textContent = data.phone_no || "N/A";
+
+        // Personal Details
+        document.getElementById("profile-first").textContent = data.first_name || "N/A";
+        document.getElementById("profile-last").textContent = data.last_name || "N/A";
+
+        // Address
+        document.getElementById("profile-address").textContent = data.address || "N/A";
+
+        // Role
+        document.getElementById("profile-role").textContent = data.role || "User";
+    })
+    .catch(err => console.error("Failed to load profile via AJAX:", err));
+
+    function getInitials(first, last) {
+        let initials = "";
+        if(first) initials += first[0].toUpperCase();
+        if(last) initials += last[0].toUpperCase();
+        if(!initials) initials = "?";
+        return initials;
+    }
+});
+ </script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="lead-container">
+
+    <div class="card shadow border-0 bg-dark lead-card">
+    
+        <div class="card-header bg-dark-purple text-white text-center py-3">
+            <h4 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i> {{ title }}</h4>
+        </div>
+
+        <div class="card-body p-6">
+
+            <form method="post" id="leadForm" class="space-y-8" novalidate>
+                {% csrf_token %}
+        
+                <!-- Top Row: Personal Info and Company & Assignment side by side -->
+                <div class="flex flex-col md:flex-row md:space-x-6">
+                    <!-- Personal Info -->
+                    <div class="md:w-1/2 space-y-4">
+                        <h6 class="text-white text-lg font-semibold flex items-center space-x-2 border-b-2 border-indigo-700 pb-1">
+                            <i class="bi bi-info-circle-fill text-indigo-500"></i>
+                            <span>Personal Information</span>
+                        </h6>
+        
+                        <!-- Full Name -->
+                        <div>
+                            <label for="id_name" class="block text-sm font-semibold text-gray-300 mb-1">Full Name <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" name="name" id="id_name" required
+                                       class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2"
+                                       placeholder="John Doe" required value="{{ form.name.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+        
+                        <!-- Email -->
+                        <div>
+                            <label for="id_email" class="block text-sm font-semibold text-gray-300 mb-1">Email <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-envelope-fill"></i></span>
+                                <input type="email" name="email" id="id_email" required
+                                       class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2"
+                                       placeholder="john@example.com" required value="{{ form.email.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+        
+                        <!-- Phone -->
+                        <div>
+                            <label for="id_phone" class="block text-sm font-semibold text-gray-300 mb-1">Phone</label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-telephone-fill"></i></span>
+                                <input type="text" name="phone" id="id_phone"
+                                       class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2"
+                                       placeholder="+977 98XXXXXXXX"  required value="{{ form.phone.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Company & Assignment -->
+                    <div class="md:w-1/2 space-y-4 mt-8 md:mt-0">
+                        <h6 class="text-white text-lg font-semibold flex items-center space-x-2 border-b-2 border-indigo-700 pb-1">
+                            <i class="bi bi-building-fill text-indigo-500"></i>
+                            <span>Company & Assignment</span>
+                        </h6>
+        
+                        <!-- Company -->
+                        <div>
+                            <label for="id_company" class="block text-sm font-semibold text-gray-300 mb-1">Company <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-building-fill"></i></span>
+                                <input type="text" name="company" id="id_company" required
+                                       class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2"
+                                       placeholder="Microsoft"  required value="{{ form.company.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+        
+                        <!-- Assign To -->
+                        <div>
+                            <label for="id_assigned_to" class="block text-sm font-semibold text-gray-300 mb-1">Assign To</label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-person-check-fill"></i></span>
+                                <select name="assigned_to" id="id_assigned_to" required
+                                        class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2">
+                                    <option value="">-- Select User --</option>
+                                    {% for user in form.fields.assigned_to.queryset %}
+                                        <option value="{{ user.id }}" {% if form.assigned_to.value == user.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ user.get_full_name|default:user.username }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Middle Row: Lead Source and Status -->
+                <div class="mt-8 space-y-4">
+                    <h6 class="text-white text-lg font-semibold flex items-center space-x-2 border-b-2 border-indigo-700 pb-1">
+                        <i class="bi bi-funnel-fill text-indigo-500"></i>
+                        <span>Lead Source & Status</span>
+                    </h6>
+
+                    <div class="flex flex-col md:flex-row md:space-x-6">
+                        <!-- Lead Source -->
+                        <div class="w-full md:w-1/2">
+                            <label for="id_source" class="block text-sm font-semibold text-gray-300 mb-1">Lead Source</label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-link-45deg"></i></span>
+                                <select name="source" id="id_source" required
+                                        class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2">
+                                    <option value="">-- Select Source --</option>
+                                    <option value="Website" {% if form.source.value == "Website" %}selected{% endif %}>Website</option>
+                                    <option value="Referral" {% if form.source.value == "Referral" %}selected{% endif %}>Referral</option>
+                                    <option value="Social Media" {% if form.source.value == "Social Media" %}selected{% endif %}>Social Media</option>
+                                    <option value="Email Campaign" {% if form.source.value == "Email Campaign" %}selected{% endif %}>Email Campaign</option>
+                                    <option value="Event" {% if form.source.value == "Event" %}selected{% endif %}>Event</option>
+                                    <option value="Other" {% if form.source.value == "Other" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+        
+                        <!-- Status -->
+                        <div class="w-full md:w-1/2">
+                            <label for="id_status" class="block text-sm font-semibold text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
+                            <div class="flex items-center bg-gray-800 border border-gray-700 rounded-md">
+                                <span class="px-3 text-gray-400"><i class="bi bi-activity"></i></span>
+                                <select name="status" id="id_status" required
+                                        class="w-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-r-md p-2">
+                                    {% for value, display in form.fields.status.choices %}
+                                        <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ display }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Bottom Row: Buttons centered -->
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button type="submit" class="btn btn-success px-6 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition">
+                        <i class="bi bi-check-circle-fill mr-2"></i> Save Lead
+                    </button>
+                    <button type="reset" class="btn btn-secondary px-6 py-2 text-gray-300 bg-gray-700 rounded-md hover:bg-gray-600 transition">
+                        <i class="bi bi-x-circle-fill mr-2"></i> Cancel
+                    </button>
+                </div>
+        
+            </form>
+        
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #1e1e2f 0%, #2d3748 100%) !important;
+    }
+    .lead-container { min-height: 100vh; padding-top: 50px; padding-bottom: 50px; width: 100%; }
+    .lead-card { width: 100%; max-width: 1000px; border-radius: 0.5rem; border: 1px solid #3a3d42; }
+    .bg-dark-purple { background-color: #4A2C83 !important; }
+    .section-title { font-size: 1rem; border-bottom: 2px solid #4A2C83; padding-bottom: 0.5rem; margin-bottom: 1.5rem !important; }
+    hr.text-secondary { border-color: #6366f1 !important; margin-top: 1.5rem; margin-bottom: 1.5rem; }
+</style>
+{% endblock %}

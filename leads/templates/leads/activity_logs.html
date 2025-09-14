@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">
+            📜 Activity Logs
+        </h2>
+        <span class="badge bg-primary fs-6">
+            {{ logs|length }} Records
+        </span>
+    </div>
+
+    <!-- Card -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-borderless mb-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">S.N</th> <!-- Serial Number Column -->
+                            <th scope="col">👤 User</th>
+                            <th scope="col">📝 Action</th>
+                            {% comment %} <th scope="col">📌 Lead</th> {% endcomment %}
+                            <th scope="col">⏰ Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <!-- Serial Number -->
+                            <td>{{ forloop.counter }}</td>
+
+                            <!-- User -->
+                            <td class="fw-semibold">
+                                <i class="bi bi-person-circle text-primary me-1"></i>
+                                {{ log.user.get_full_name|default:log.user.username }}
+                            </td>
+
+                            <!-- Action -->
+                            <td>
+                                <span class="badge bg-info text-dark px-3 py-2 rounded-pill">
+                                    {{ log.action }}
+                                </span>
+                            </td>
+
+                            <!-- Lead -->
+                            {% comment %} <td>
+                                {% if log.lead %}
+                                    <a href="{% url 'leads:lead_detail' log.lead.pk %}" 
+                                       class="text-decoration-none fw-medium text-primary">
+                                        {{ log.lead.name }}
+                                    </a>
+                                {% else %}
+                                    <span class="badge bg-secondary rounded-pill">
+                                        N/A
+                                    </span>
+                                {% endif %}
+                            </td> {% endcomment %}
+
+                            <!-- Timestamp -->
+                            <td>
+                                <small class="text-muted">
+                                    {{ log.timestamp|date:"M d, Y H:i" }}
+                                </small>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-journal-x fs-4 d-block mb-2"></i>
+                                No activity logs found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

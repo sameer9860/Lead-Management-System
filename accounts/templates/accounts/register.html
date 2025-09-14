@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1e1e2f] to-[#2d3748] p-6 w-full">
+    
+    <div class="w-full max-w-3xl bg-[#2d2d3a] rounded-xl shadow-xl p-10 text-gray-100 space-y-6">
+        
+        <!-- Error messages -->
+        <div class="space-y-3 mb-6">
+            {% for message in messages %}
+            <div class="flex items-center gap-2 p-3 rounded-md border border-red-400 bg-red-900/40 text-red-400">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span class="font-medium">Error:</span>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Heading -->
+        <h2 class="text-center text-2xl font-bold text-blue-400 mb-8">Register User</h2>
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" id="registerForm" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Two-column layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-2">{{ field.label }}</label>
+
+                    {% if "password" in field.name %}
+                    <!-- Password field with toggle -->
+                    <div class="relative">
+                        {% render_field field class="w-full rounded-lg border border-gray-600 bg-[#1e1e2f] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white pr-10" id=field.id_for_label placeholder=field.label %}
+                        
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePassword('{{ field.id_for_label }}')">
+                            <!-- Eye (visible) -->
+                            <svg id="eye-icon-{{ field.id_for_label }}" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden text-gray-400 hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <!-- Eye-off (hidden) -->
+                            <svg id="eye-off-icon-{{ field.id_for_label }}" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </span>
+                    </div>
+                    {% else %}
+                    <!-- Normal fields -->
+                    {% render_field field class="w-full rounded-lg border border-gray-600 bg-[#1e1e2f] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" id=field.id_for_label placeholder=field.label %}
+                    {% endif %}
+
+                    <!-- Field errors -->
+                    {% if field.errors %}
+                    <p class="mt-2 text-sm text-red-400">{{ field.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors">
+                Register
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const input = document.getElementById(fieldId);
+    const eyeIcon = document.getElementById('eye-icon-' + fieldId);
+    const eyeOffIcon = document.getElementById('eye-off-icon-' + fieldId);
+
+    if (!input) return;
+
+    if (input.type === "password") {
+        input.type = "text";
+        eyeIcon.classList.remove("hidden");
+        eyeOffIcon.classList.add("hidden");
+    } else {
+        input.type = "password";
+        eyeIcon.classList.add("hidden");
+        eyeOffIcon.classList.remove("hidden");
+    }
+}
+
+
+document.getElementById("register-form").addEventListener("submit", function(e) {
+    e.preventDefault();  // prevent normal form submission
+
+    const form = this;
+    const formData = new FormData(form);
+    const msgDiv = document.getElementById("register-msg");
+
+    fetch("{% url 'accounts:register' %}", {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            // Success message
+            msgDiv.innerHTML = `<p class="text-green-600 font-semibold">${data.message}</p>`;
+
+            // Redirect after 1.5s
+            setTimeout(() => {
+                window.location.href = data.redirect_url;
+            }, 1500);
+        } else {
+            // Show errors
+            let errorsHtml = "";
+            for (const field in data.errors) {
+                errorsHtml += `<p class="text-red-600 text-left">${field}: ${data.errors[field].join(", ")}</p>`;
+            }
+            msgDiv.innerHTML = errorsHtml;
+        }
+    })
+    .catch(err => {
+        msgDiv.innerHTML = `<p class="text-red-600">An error occurred. Please try again.</p>`;
+        console.error(err);
+    });
+});
+
+</script>
+
+{% endblock %}
