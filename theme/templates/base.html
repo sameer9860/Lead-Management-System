@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <title>LMS</title>
+    <link rel="icon" type="image/png" href="{% static 'images/lms.png' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -104,9 +105,7 @@
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'leads:change_password' %}">
                 Change Password
             </a>
-            <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'accounts:logout_view' %}">
-                Logout
-            </a>
+           
             {% if user.is_superuser or user.role == 'admin' %}
             <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'leads:activity_logs' %}">
                 Logs
@@ -115,6 +114,10 @@
             <button class="btn btn-outline btn-sm w-full" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
                 🌓 Toggle Theme
             </button>
+
+            <a class="btn btn-outline btn-sm w-full mb-3" href="{% url 'accounts:logout_view' %}">
+                Logout
+            </a>
         </div>
 
     </aside>
