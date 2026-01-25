@@ -1,3 +1,66 @@
+# Lead Management System
+
+A **Lead Management System** built with **Django** and **Tailwind CSS** for managing sales leads efficiently. The system provides a **dashboard** for tracking leads, assigning them to users, monitoring progress, and analyzing conversion rates.
+
+---
+
+## Features
+
+### Dashboard
+- Overview of leads: **New**, **In Progress**, **Converted**, **Lost** with numbers.
+- Summary of lead **sources**.
+- Admin/Manager can **create and assign leads** to Sales Executives or Managers.
+- Filter leads and generate reports:
+  - Conversion Rate
+  - Overview
+  - Source of leads
+
+### User Management
+- Register **Admin**, **Manager**, **Sales Executive** accounts.
+- Profile section with:
+  - Name and bio
+  - Profile picture
+  - Change password
+- Login with **toggle theme** (Light/Dark)
+- Forget password via **email OTP** (Mailhog background task)
+
+### Lead Management
+- Create, edit, comment on leads
+- Filter leads and track **status changes**
+- Logs for actions:
+  - Login / Logout
+  - Viewed profile
+  - Created / Deleted / Viewed leads
+  - Accessed dashboard
+
+---
+
+## Screenshots
+
+### Dashboard & Leads
+![Dashboard](theme/static/images/lms1.png)
+![Leads Status](theme/static/images/lms2.png)
+![Create Lead](theme/static/images/lms3.png)
+![Lead Details](theme/static/images/lms4.png)
+![Comments](theme/static/images/lms5.png)
+![Reports Overview](theme/static/images/lms6.png)
+![Conversion Rate](theme/static/images/lms7.png)
+![Sources of Leads](theme/static/images/lms8.png)
+![Profile Section](theme/static/images/lms9.png)
+![Change Password](theme/static/images/lms10.png)
+![Login](theme/static/images/lms11.png)
+![Register](theme/static/images/lms12.png)
+
+---
+
+## Tech Stack
+
+- **Backend:** Django  
+- **Frontend:** Tailwind CSS, HTML, JavaScript  
+- **Database:** SQLite (replaceable with PostgreSQL later)  
+- **Email Testing:** Mailhog for OTPs  
+
+---
 # 🚀 Lead Management System - Installation Guide
 
 # 1. Clone the Repository
