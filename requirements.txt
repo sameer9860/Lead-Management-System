@@ -1,0 +1,13 @@
+asgiref==3.11.0
+decouple==0.0.7
+Django==6.0.1
+django-background-tasks==1.2.8
+django-filter==25.2
+django-tailwind==4.4.2
+django-widget-tweaks==1.5.1
+dotenv==0.9.9
+pillow==12.1.0
+pytailwindcss==0.3.0
+python-dotenv==1.2.1
+six==1.17.0
+sqlparse==0.5.5
