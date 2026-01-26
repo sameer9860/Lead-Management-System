@@ -58,7 +58,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'lead_management.urls'
 TAILWIND_APP_NAME = 'theme'
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"  # Adjust this path if necessary
+# NPM_BIN_PATH = "/usr/local/bin/npm"  # Adjust this path if necessary
 
 
 TEMPLATES = [
@@ -115,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 USE_TZ = True
+
 TIME_ZONE = 'Asia/Kathmandu'
 
 USE_I18N = True
