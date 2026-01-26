@@ -128,15 +128,11 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optional: your existing static dirs for development
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'theme', 'static'),
-]
 
 
-STATIC_URL = 'static/'
+STATIC_URL = 'staticfiles/'
 
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Directory for static files
+STATICFILES_DIRS = [BASE_DIR / 'staticfiles']  # Directory for static files
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
